@@ -17,10 +17,11 @@ string personalInfo[TOTAL_ROOMS][3]; // to store id, name, and phone number
 
 int showMenu();
 int bookRoom();
+int searchById();
 void showRoomAvailability();
 void showRoomDetails();
 void showUsersList();
-int searchById();
+void leaveRoom();
 
 int main() {
     cout << "\n============================================\n";
@@ -60,7 +61,9 @@ int main() {
             }
             break;
         case 6:
-            cout << "\033[1;32m" << "Thank you for using Our Hotel. Goodbye!" << "\033[0m\n";
+            leaveRoom();
+            break;
+        case 7:
             return 0;
         default:
             cout << "\033[1;31m" << "Invalid choice! Please try again." << "\033[0m\n";
@@ -80,10 +83,12 @@ int showMenu(){
         cout << "3. Display Room Details\n";
         cout << "4. Display Users List\n";
         cout << "5. Search users by Id\n";
-        cout << "6. Exit\n";
+        cout << "6. Leave room\n";
+        cout << "7. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
-        if (cin.fail() || (choice < 1 || choice > 6)){
+
+        if (cin.fail() || (choice < 1 || choice > 7)){
             cout << "\033[1;31m" << "Invalid choice, please try again" << "\033[0m" << endl;
             cin.clear();
             cin.ignore();
@@ -280,4 +285,30 @@ int searchById(){
         }
     }
     return -1;
+}
+
+void leaveRoom(){
+    int roomNumber;
+    leave_room:
+        cout << "\nEnter the room number (0 to go back): ";
+        cin >> roomNumber;
+        if (cin.fail() || roomNumber < 0){
+            cin.clear();
+            cin.ignore();
+            goto leave_room;
+        }
+
+    if (roomNumber != 0){
+        if(roomAvailability[roomNumber-1] == true){
+            cout << "\033[1;31m" << "Room is already empty \v\v\v" << "\033[0m";
+            goto leave_room;
+        }
+
+        string name = personalInfo[roomNumber-1][0];
+        for (int i = 0; i < 3; i++){
+            personalInfo[roomNumber-1][i] = '\0';
+        }
+
+        cout << "\033[1;32m" << "Thank you for using Our Hotel " << name <<". Goodbye!" << "\033[0m\n";
+    }
 }
