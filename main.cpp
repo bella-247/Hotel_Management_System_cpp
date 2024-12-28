@@ -146,15 +146,14 @@ int bookRoom(){
             if (status == -1){ // if not registered, then the room will not be reserved for that user
                 return 0;
             }
-            int i;
-            for (i = 0; i < NUM_ROOM_TYPES; i++){
-                if (roomNumber < prefixRoomSizes[i+1]){
-                    roomsReserved[i] += 1;
-                    break;
-                }
+
+            int room_type = 0;
+            while(roomNumber-1 >= prefixRoomSizes[room_type+1]){
+                room_type++;
             }
+            roomsReserved[room_type]++;
             roomAvailability[roomNumber - 1] = false; // Mark the room as booked
-            cout << "\033[1;32m" << "Room " << roomNumber << " of the type *" << roomTypes[i] << "* has been successfully booked!" << "\033[0m\n";
+            cout << "\033[1;32m" << "Room " << roomNumber << " of the type *" << roomTypes[room_type] << "* has been successfully booked!" << "\033[0m\n";
             num_available_rooms--;
         }
 
@@ -199,9 +198,10 @@ void showRoomAvailability(){
             }
             else{
                 int reserved = roomsReserved[type];
+                cout << "reserved = " << reserved << endl;
                 for (;room < prefixRoomSizes[type+1]; room++){
                     if(roomAvailability[room] == false){
-                        bool islast = --reserved > 0;
+                        bool islast = --reserved == 0;
                         cout << room + 1;
                         if (!islast){
                             cout << ", ";
@@ -240,6 +240,7 @@ void showUsersList(){
         if (room >= prefixRoomSizes[room_type+1]){
             room_type++;
         }
+
         if(roomAvailability[room] == false){
             string name = personalInfo[room][0], id = personalInfo[room][1], phone = personalInfo[room][2];
             cout << left << setw(10) << room+1 << setw(20) << name << setw(10) << id << setw(15) << phone << setw(10) << roomTypes[room_type] << endl;
@@ -299,15 +300,24 @@ void leaveRoom(){
         }
 
     if (roomNumber != 0){
-        if(roomAvailability[roomNumber-1] == true){
+        roomNumber--; // changing the user input into the index of the room
+        if(roomAvailability[roomNumber] == true){
             cout << "\033[1;31m" << "Room is already empty \v\v\v" << "\033[0m";
             goto leave_room;
         }
 
-        string name = personalInfo[roomNumber-1][0];
+        string name = personalInfo[roomNumber][0];
         for (int i = 0; i < 3; i++){
-            personalInfo[roomNumber-1][i] = '\0';
+            personalInfo[roomNumber][i] = '\0';
         }
+        roomAvailability[roomNumber] = true;
+        num_available_rooms++;
+
+        int room_type = 0;
+        while (roomNumber >= prefixRoomSizes[room_type+1]){
+            room_type++;
+        }
+        roomsReserved[room_type]--;
 
         cout << "\033[1;32m" << "Thank you for using Our Hotel " << name <<". Goodbye!" << "\033[0m\n";
     }
