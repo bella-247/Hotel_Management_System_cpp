@@ -34,7 +34,7 @@ int main() {
         roomAvailability[i] = true;
     }
 
-    // this is creating prefix sum array for the number of rooms in each type
+    // this is creating prefix sum array for the range of rooms in each type
     for(int i = 0; i < NUM_ROOM_TYPES; i++){
         prefixRoomSizes[i+1] = prefixRoomSizes[i] + roomSizes[i];
     }
@@ -256,21 +256,10 @@ int searchById(){
     getline(cin, id);
 
     int room_type = 0;
-    bool found;
     for(int room = 0; room < TOTAL_ROOMS; room++){
         if(roomAvailability[room] == false){
             string roomUserId= personalInfo[room][1];
-            found = false;
-            for (int i = 0, j = 0; roomUserId[i] != '\0' && id[j] != '\0'; i++, j++){
-                if (roomUserId[i] == id[j]){
-                    found = true;
-                }
-                else{
-                    found= false;
-                    break;
-                }
-            }
-            if( found){
+            if(roomUserId == id){
                 cout << "\033[1;32m" << "\nFound the user" << "\033[0m"<< endl;
                 cout << "Name: " << personalInfo[room][0]<< endl;
                 cout << "Id: " << personalInfo[room][1] << endl;
