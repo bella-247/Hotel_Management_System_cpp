@@ -23,6 +23,7 @@ void showRoomDetails();
 void showUsersList();
 void leaveRoom();
 
+//Main function
 int main() {
     cout << "\n============================================\n";
     cout << "\033[1;32m" << "         Welcome to Utopia Hotel        " << "\033[0m\n";
