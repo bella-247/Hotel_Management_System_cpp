@@ -1,6 +1,6 @@
 #include <iostream>  // For input/output operations
 #include <iomanip>   // For formatting output
-#include <cstring>   // For string operations (not heavily used here)
+#include <string>   // For string operations
 
 using namespace std;
 
@@ -24,7 +24,7 @@ bool roomAvailability[TOTAL_ROOMS];
 // Array to store user information for each room: Name, ID, and Phone
 string personalInfo[TOTAL_ROOMS][3];
 
-// Function prototypes (declaring functions before their implementation for clarity)
+// Function prototypes
 int showMenu();
 void bookRoom();
 int searchById();
