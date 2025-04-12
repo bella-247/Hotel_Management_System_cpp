@@ -50,7 +50,7 @@ struct Booking {
 } bookings[10000];
 
 
-
+// Payment Data
 struct Payment {
     int payment_id;
     Booking booking;
