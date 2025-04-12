@@ -8,7 +8,7 @@ struct Payment {
     float amount;
     string payment_date; // formatted as YYYY-MM-DD
     bool is_paid;
-    string payment_method; // Example: "Tele Birr ","Bank" etc.
+    string payment_method; // Example: "Tele Birr ","Bank" or other as your desire
 };
 void addPayment(vector<Payment>& payments, int id, float amount, string date, string method) {
     Payment newPayment = {id, amount, date, false, method};
