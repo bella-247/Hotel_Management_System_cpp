@@ -58,5 +58,11 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "iostream": "cpp"
-  }
+  },
+  "code-runner.executorMap": {
+    "cpp": "cd $dir && g++ main.cpp structures/structures.cpp Features/menus.cpp Features/features.cpp Auth/authentication.cpp -o main -I. && .\\main"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.clearPreviousOutput": true
 }

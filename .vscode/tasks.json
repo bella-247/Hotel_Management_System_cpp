@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build and run",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "main.cpp",
+                "structures/structures.cpp",
+                "Features/menus.cpp",
+                "Features/features.cpp",
+                "Auth/authentication.cpp",
+                "-o",
+                "main",
+                "-I."
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}
