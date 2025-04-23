@@ -1,13 +1,14 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "database.cpp"
-#include "structures.cpp"
+#include "database/database.cpp"
+#include "structures/structures.cpp"
+#include "Auth/authentication.cpp"
 
 using namespace std;
 
 // --------------------- global variables ----------------- //
-int customer_index;
+int customer_id, staff_id;
 bool isUserRegistered = false;
 bool isStaff = false, isCustomer = false;
 
@@ -20,32 +21,43 @@ void showCustomerMenu();
 void showStaffMenu();
 
 // ------------- authentication functions --------------//
-int logIn();
-int signUp();
-int logOut();
+
+
+
+
 
 // --------- helper functions -------------- //
 void showChoiceError();
 
+
+// initialize vectors 
+vector <Staff> staffs;
+vector <RoomType> room_types;
+vector <Room> rooms;
+vector <Customer> customers;
+vector <Booking> bookings;
+vector <Payment> payments;
+
 int main(){
     initializeDatabase();
-    cout << "\n============================================\n";
-    cout << "\033[1;32m" << "         Welcome to Utopia Hotel        " << "\033[0m\n";
-    cout << "============================================\n";
+    main:
+        cout << "\n============================================\n";
+        cout << "\033[1;32m" << "         Welcome to Utopia Hotel        " << "\033[0m\n";
+        cout << "============================================\n";
 
-    while(true){
-        if (!isUserRegistered){
-            showRegistrationMenu();
-        }
-        else{
-            if(isCustomer){
-                showCustomerMenu();
+        while(true){
+            if (!isUserRegistered){
+                showRegistrationMenu();
             }
             else{
-                showStaffMenu();
+                if(isCustomer){
+                    showCustomerMenu();
+                }
+                else{
+                    showStaffMenu();
+                }
             }
         }
-    }
     return 0;
 }
 
@@ -124,7 +136,7 @@ void showCustomerMenu(){
         cout << "Enter your choice: ";
         cin >> choice;  // Get input from the user
 
-        if(cin.fail || choice < 1 || choice > 5){
+        if(cin.fail() || choice < 1 || choice > 5){
             showChoiceError();
             goto menu;
         }
@@ -141,140 +153,14 @@ void showStaffMenu(){
         cout << "Enter your choice: ";
         cin >> choice;
 
-        if(cin.fail || choice < 1 || choice > 2){
+        if(cin.fail() || choice < 1 || choice > 2){
             showChoiceError();
             goto menu;
         }
 }
 
 
-int signUp(){
-    string name, email, phone_number, password, role;
 
-    signup:
-        cout << "Signing up.." << endl;
-
-        cout << "Enter your name: ";
-        cin >> name;
-        cout << "Enter your email: ";
-        cin >> email;
-        cout << "Enter your password: ";
-        cin >> password;
-        cout << "Enter your phone number: ";
-        cin >> phone_number;
-
-        if(isStaff){
-            cout << "Enter your role: ";
-            cin >> role;
-        }
-
-        if(name.empty() || email.empty() || phone_number.empty() || password.empty() || (isStaff && role.empty())){
-                cout << "Empty fields detected, please fill all the fields correctly."<< endl;
-                goto signup;
-        }
-
-        bool found = false;
-        if(isCustomer){
-            for(int i = 0; i < CUSTOMER_SIZE; i++){
-                if(customers[i].email == email || customers[i].phone_number == phone_number){
-                    cout << "User already registered, please login.";
-                    return logIn();
-                }
-            }
-            if(!found){
-                customers[CUSTOMER_SIZE].customer_id = CUSTOMER_SIZE;
-                customers[CUSTOMER_SIZE].name = name;
-                customers[CUSTOMER_SIZE].email = email;
-                customers[CUSTOMER_SIZE].password = password;
-                customers[CUSTOMER_SIZE].phone_number = phone_number;
-                isUserRegistered = true;
-                CUSTOMER_SIZE++;
-
-                cout << "Successfully Registered!!" << endl;
-                return 0;
-            }
-        }
-
-        else{
-            for(int i = 0; i < STAFF_SIZE; i++){
-                if(staff[i].email == email || staff[i].phone_number == phone_number){
-                    cout << "User already registered, please login.";
-                    return logIn();
-                }
-            }
-
-            if(!found){
-                staff[STAFF_SIZE].staff_id = STAFF_SIZE;
-                staff[STAFF_SIZE].name = name;
-                staff[STAFF_SIZE].email = email;
-                staff[STAFF_SIZE].password = password;
-                staff[STAFF_SIZE].phone_number = phone_number;
-                staff[STAFF_SIZE].role = role;
-                isUserRegistered = true;
-                STAFF_SIZE++;
-
-                cout << "Successfully Registered!!" << endl;
-                return 0;
-            }
-        }
-
-}
-
-
-int logIn(){
-    string name, email, phone_number, password, role;
-
-    login:
-        cout << "Logging in.." << endl;
-
-        cout << "Enter your email: ";
-        cin >> email;
-        cout << "Enter your password: ";
-        cin >> password;
-
-        if(email.empty() || password.empty()){
-                cout << "Empty fields detected, please fill all the fields correctly."<< endl;
-                goto login;
-        }
-
-        bool found = false;
-        if(isCustomer){
-            for(int i = 0; i < CUSTOMER_SIZE; i++){
-                if(customers[i].email == email && customers[i].password == password){
-                    cout << "Successfully Logged In" << endl;
-                    customer_index = i;
-                    isUserRegistered = true;
-                    return 0;
-                }
-            }
-            if(!found){
-                cout << "Email or Password doesn't match!" << endl;
-                cout << "If you don't have account please sign up" << endl;
-                return -1;
-            }
-        }
-
-        else{
-            for(int i = 0; i < STAFF_SIZE; i++){
-                if(staff[i].email == email || staff[i].phone_number == phone_number){
-                    cout << "Successfully Logged In!!" << endl;
-                    customer_index = i;
-                    isUserRegistered = true;
-                    return 0;
-                }
-            }
-
-            if(!found){
-                cout << "Email or Password doesn't match!" << endl;
-                cout << "If you don't have account please sign up" << endl;
-                return -1;
-            }
-        }
-}
-
-int logOut(){
-    cout << "Logging out.." << endl;
-}
 
 
 
