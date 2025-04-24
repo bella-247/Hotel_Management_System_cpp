@@ -1,4 +1,4 @@
-#include <iostream>  // For input/output operations
+#include <iostream>  // For input/output operations.
 #include <iomanip>   // For formatting output
 #include <string>   // For string operations
 
