@@ -11,6 +11,8 @@
                 "Features/menus.cpp",
                 "Features/features.cpp",
                 "Auth/authentication.cpp",
+                "${workspaceFolder}/src/payment.cpp",// for the payment one
+
                 "-o",
                 "main",
                 "-I."

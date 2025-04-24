@@ -3,7 +3,11 @@
 *.layout
 *.depend
 *.cbp
+<<<<<<< HEAD
 *.py
 *.bkp
 .py
 .exe
+=======
+*.mp4
+>>>>>>> 337d420e165e18a203398a37a3f308c2b17a8196
