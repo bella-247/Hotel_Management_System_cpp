@@ -9,7 +9,7 @@ int signUp(int &customer_id, int &staff_id, bool &isUserRegistered, bool &isStaf
     string name, email, phone_number, password, role;
 
     signup:
-        cout << "\nSigning up.." << endl;
+        cout << "\n Signing up.." << endl;
 
         cout << "Enter your name: ";
         cin >> name;
