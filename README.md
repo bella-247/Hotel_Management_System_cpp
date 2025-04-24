@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Hotel_Management_System_cpp
-=======
 # Hotel Reservation System
 
 This project is a **C++ Hotel Reservation System** designed to handle room bookings, manage room availability, display user details, and more. The program is interactive and user-friendly, suitable for educational purposes or as a starting point for a more advanced hotel management application.
@@ -120,4 +117,3 @@ Thanks to our instructor **Fedlu Nur Hussein**  for providing the opportunity to
 ![Output image 1](<./Output Screenshots/image 4.png>)
 ![Output image 1](<./Output Screenshots/image 5.png>)
 ![Output image 1](<./Output Screenshots/image 6.png>)
->>>>>>> 337d420e165e18a203398a37a3f308c2b17a8196
