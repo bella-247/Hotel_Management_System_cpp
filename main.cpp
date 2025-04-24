@@ -106,6 +106,7 @@ void initializeDatabase(){
     initializeBookings(bookings, customers, rooms);
     initializePayments(payments, bookings);
 }
+//Function calling specifically for the payment system
 makePayment(201, 500.00, "Cash");
 makePayment(202, 300.50, "Tele birr");
 
