@@ -28,11 +28,11 @@ void initializeRooms(vector<Room>& rooms, vector<RoomType>& room_types) {
 }
 
 void initializeCustomers(vector<Customer>& customers) {
-    customers.push_back({1, "John Doe", "johndoe@example.com", "password123", "1234567890", 1});
-    customers.push_back({2, "Jane Smith", "janesmith@example.com", "securepassword", "0987654321", 2});
-    customers.push_back({3, "Alice Brown", "alicebrown@example.com", "password456", "1122334455", 3});
-    customers.push_back({4, "Bob Johnson", "bobjohnson@example.com", "mypassword", "2233445566", 4});
-    customers.push_back({5, "Charlie Williams", "charliewilliams@example.com", "charliepass", "3344556677", 5});
+    customers.push_back({1, "John Doe", "johndoe@example.com", "password123", "1234567890"});
+    customers.push_back({2, "Jane Smith", "janesmith@example.com", "securepassword", "0987654321"});
+    customers.push_back({3, "Alice Brown", "alicebrown@example.com", "password456", "1122334455"});
+    customers.push_back({4, "Bob Johnson", "bobjohnson@example.com", "mypassword", "2233445566"});
+    customers.push_back({5, "Charlie Williams", "charliewilliams@example.com", "charliepass", "3344556677"});
 }
 void initializeBookings(vector<Booking>& bookings, vector<Customer>& customers, vector<Room>& rooms) {
     bookings.push_back({1, customers[0].customer_id, rooms[0].room_id, "2025-03-01", "2025-03-05", rooms[0].room_type.price * 4});

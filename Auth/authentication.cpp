@@ -1,9 +1,4 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include "../structures/structures.h"
 #include "authentication.h"
-using namespace std;
 
 int signUp(int &customer_id, int &staff_id, bool &isUserRegistered, bool &isStaff, bool &isCustomer, vector<Customer> &customers, vector<Staff> &staffs){
     string name, email, phone_number, password, role;
@@ -39,10 +34,8 @@ int signUp(int &customer_id, int &staff_id, bool &isUserRegistered, bool &isStaf
                 }
             }
             if(!found){
-                customers.push_back({customers.back().customer_id + 1, name, email, password, phone_number});
+                createCustomer(customers, name, email, password, phone_number);
                 isUserRegistered = true;
-
-                cout << "Customer<" << name << "> Successfully Registered!!" << endl;
                 return 0;
             }
         }

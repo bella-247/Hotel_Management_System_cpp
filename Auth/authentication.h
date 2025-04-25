@@ -1,5 +1,6 @@
 #include <vector>
-#include "../structures/structures.h"
+#include "../Structures/structures.h"
+#include "../Systems/Customer/customer.h"
 
 using namespace std;
 

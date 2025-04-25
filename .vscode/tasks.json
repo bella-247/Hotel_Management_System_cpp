@@ -7,12 +7,12 @@
             "command": "g++",
             "args": [
                 "main.cpp",
-                "structures/structures.cpp",
+                "Structures/structures.cpp",
                 "Features/menus.cpp",
                 "Features/features.cpp",
                 "Auth/authentication.cpp",
-                "${workspaceFolder}/src/payment.cpp",// for the payment one
-
+                "Database/database.cpp",
+                "Systems/Payment/payment.cpp",
                 "-o",
                 "main",
                 "-I."

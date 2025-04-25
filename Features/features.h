@@ -1,5 +1,5 @@
 #include <vector>
-#include "../structures/structures.h"
+#include "../Structures/structures.h"
 
 using namespace std;
 

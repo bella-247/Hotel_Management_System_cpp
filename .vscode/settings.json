@@ -57,10 +57,12 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "ostream": "cpp",
+    "string": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ main.cpp structures/structures.cpp Features/menus.cpp Features/features.cpp Auth/authentication.cpp -o main -I. && .\\main"
+    "cpp": "if (Test-Path main.exe) { Remove-Item main.exe }; g++ main.cpp Structures/structures.cpp Features/menus.cpp Features/features.cpp Auth/authentication.cpp Database/database.cpp Systems/Payment/payment.cpp Systems/Customer/customer.cpp -o main.exe -I. -IDatabase/sqlite3 -LDatabase -lsqlite3; ./main.exe"
   },
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,

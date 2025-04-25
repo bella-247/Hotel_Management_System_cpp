@@ -32,7 +32,6 @@ struct Room {
 struct Customer {
     int customer_id;
     string name, email, password, phone_number;
-    int room_id;
 };
 
 // Booking structure

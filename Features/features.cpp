@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../structures/structures.h"
+#include "../Structures/structures.h"
 
 using namespace std;
 

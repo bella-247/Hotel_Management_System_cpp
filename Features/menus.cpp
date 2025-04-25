@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../structures/structures.h"
+#include "../Structures/structures.h"
 #include "../Auth/authentication.h"
 
 using namespace std; 
@@ -71,7 +71,7 @@ void showRegistrationMenu(int &customer_id, int &staff_id, bool &isUserRegistere
             }
 }
 
-void showStaffMenu(){
+void showStaffMenu(vector<Customer> &customers){
     int choice;
 
     menu:
@@ -87,7 +87,7 @@ void showStaffMenu(){
         }
 }
 
-void showCustomerMenu(){
+void showCustomerMenu(vector<Customer> &customers){
     int choice;
     menu:
         cout << "\n********** Hotel Menu **********\n";
@@ -102,6 +102,22 @@ void showCustomerMenu(){
         if(cin.fail() || choice < 1 || choice > 5){
             showChoiceError();
             goto menu;
+        }
+        switch(choice){
+            case 1:
+                showCustomers(customers);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            default:
+                showChoiceError();
+                goto menu;
         }
 }
 
