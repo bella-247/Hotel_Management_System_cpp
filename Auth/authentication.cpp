@@ -1,231 +1,153 @@
 #include "authentication.h"
 
-bool signUp(int &user_id, 
-           bool &isStaff, bool &isCustomer, bool &isUserRegistered) {
-  string name, email, phone_number, password, role;
-
-signup:
-  cout << "\n Signing up.." << endl;
-signup:
-  cout << "\n Signing up.." << endl;
-
-  cout << "Enter your name: ";
-  cin >> name;
-  cout << "Enter your email: ";
-  cin >> email;
-  cout << "Enter your password: ";
-  cin >> password;
-  cout << "Enter your phone number: ";
-  cin >> phone_number;
-  cout << "Enter your name: ";
-  cin >> name;
-  cout << "Enter your email: ";
-  cin >> email;
-  cout << "Enter your password: ";
-  cin >> password;
-  cout << "Enter your phone number: ";
-  cin >> phone_number;
-
-  if (isStaff) {
-    cout << "Enter your role: ";
-    cin >> role;
-  }
-  if (isStaff) {
-    cout << "Enter your role: ";
-    cin >> role;
-  }
-
-  if (name.empty() || email.empty() || phone_number.empty() ||
-      password.empty() || (isStaff && role.empty())) {
-    cout << "Empty fields detected, please fill all the fields correctly."
-         << endl;
-    goto signup;
-  }
-  if (name.empty() || email.empty() || phone_number.empty() ||
-      password.empty() || (isStaff && role.empty())) {
-    cout << "Empty fields detected, please fill all the fields correctly."
-         << endl;
-    goto signup;
-  }
-
-  bool found = false;
-  if (isCustomer) {
-    for (const Customer &customer : customers) {
-      if (customer.email == email) {
-        cout << "User already registered, please login.";
-        return logIn(user_id, isUserRegistered, isStaff,
-                     isCustomer);
-      }
+bool isEmpty(const string &str) {
+    for(char c : str) {
+        if (!isspace(c)) {
+            return false; // Found a non-space character
+        }
     }
-    if (!found) {
-        Customer customer;
-            customer.name = name;
-            customer.email = email;
-            customer.password = password;
-            customer.phone_number = phone_number;
-      addCustomer(customer);
-      isUserRegistered = true;
-      return true;
-    }
-  }
-
-  else {
-    for (const Staff &staff : staffs) {
-      if (staff.email == email) {
-        cout << "User already registered, please login.";
-        return logIn(user_id, isUserRegistered, isStaff,
-                     isCustomer);
-      }
-    }
-
-    if (!found) {
-      int new_id = staffs.empty() ? 1 : staffs.back().staff_id + 1;
-      staffs.push_back({new_id, name, email, password, phone_number, role});
-      isUserRegistered = true;
-      cout << "Staff<" << name << "> Successfully Registered!!" << endl;
-      return true;
-    }
-  }
-
-  return false;
-    if (!found) {
-      int new_id = staffs.empty() ? 1 : staffs.back().staff_id + 1;
-      staffs.push_back({new_id, name, email, password, phone_number, role});
-      isUserRegistered = true;
-      cout << "Staff<" << name << "> Successfully Registered!!" << endl;
-      return true;
-    }
-  }
-
-  return false;
+    return str.empty();
 }
 
-bool logIn(int &user_id, 
-          bool &isStaff, bool &isCustomer, bool &isUserRegistered) {
-  string email, password;
+bool getData(Customer &customer){
+    cout << "Name: "; cin >> customer.name;
+    cout << "Email: "; cin >> customer.email;
+    cout << "Password: "; cin >> customer.password;
+    cout << "Phone Number: "; cin >> customer.phone_number;
 
-login:
-  cout << "first email: " << customers.at(0).email << endl;
-  cout << "first password: " << customers.at(0).password << endl;
-  cout << "\nLogging in.." << endl;
-login:
-  cout << "first email: " << customers.at(0).email << endl;
-  cout << "first password: " << customers.at(0).password << endl;
-  cout << "\nLogging in.." << endl;
-
-  cout << "Enter your email: ";
-  cin >> email;
-  cout << "Enter your password: ";
-  cin >> password;
-  cout << "Email: " << email;
-  cout << "Password: " << password;
-
-  if (email.empty() || password.empty()) {
-    cout << "Empty fields detected, please fill all the fields correctly."
-         << endl;
-    goto login;
-  }
-  cout << "Enter your email: ";
-  cin >> email;
-  cout << "Enter your password: ";
-  cin >> password;
-  cout << "Email: " << email;
-  cout << "Password: " << password;
-
-  if (email.empty() || password.empty()) {
-    cout << "Empty fields detected, please fill all the fields correctly."
-         << endl;
-    goto login;
-  }
-
-  bool found = false;
-  if (isCustomer) {
-    for (Customer customer : customers) {
-      cout << "Customer email: " << customer.email << endl;
-      cout << "Customer password: " << customer.password << endl;
-      if (customer.email == email && customer.password == password) {
-        cout << "Successfully Logged In" << endl;
-        user_id = customer.customer_id;
-        isUserRegistered = true;
-        return true;
-      }
+    if (isEmpty(customer.name) || isEmpty(customer.email) || isEmpty(customer.password) || isEmpty(customer.phone_number)) {
+        cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;
+        return false;
     }
-    if (!found) {
-      cout << "Email or Password doesn't match!" << endl;
-      cout << "If you don't have account please sign up" << endl;
-      return false;
-    }
-  }
-  bool found = false;
-  if (isCustomer) {
-    for (Customer customer : customers) {
-      cout << "Customer email: " << customer.email << endl;
-      cout << "Customer password: " << customer.password << endl;
-      if (customer.email == email && customer.password == password) {
-        cout << "Successfully Logged In" << endl;
-        user_id = customer.customer_id;
-        isUserRegistered = true;
-        return true;
-      }
-    }
-    if (!found) {
-      cout << "Email or Password doesn't match!" << endl;
-      cout << "If you don't have account please sign up" << endl;
-      return false;
-    }
-  }
-
-  else {
-    for (Staff staff : staffs) {
-      cout << "Staff email: " << staff.email << endl;
-      cout << "Staff password: " << staff.password << endl;
-      if (staff.email == email && staff.password == password) {
-        cout << "Successfully Logged In!!" << endl;
-        user_id = staff.staff_id;
-        isUserRegistered = true;
-        return true;
-      }
-    }
-  else {
-    for (Staff staff : staffs) {
-      cout << "Staff email: " << staff.email << endl;
-      cout << "Staff password: " << staff.password << endl;
-      if (staff.email == email && staff.password == password) {
-        cout << "Successfully Logged In!!" << endl;
-        user_id = staff.staff_id;
-        isUserRegistered = true;
-        return true;
-      }
-    }
-
-    if (!found) {
-      cout << "Email or Password doesn't match!" << endl;
-      cout << "If you don't have account please sign up" << endl;
-      return false;
-    }
-  }
-  return false;
-    if (!found) {
-      cout << "Email or Password doesn't match!" << endl;
-      cout << "If you don't have account please sign up" << endl;
-      return false;
-    }
-  }
-  return false;
+    return true;
 }
 
-void logOut(int &user_id, bool &isStaff, bool &isCustomer, bool &isUserRegistered, void (*startProgram)()) {
-  cout << "\nLogging out.." << endl;
-  isUserRegistered = false;
-  isStaff = false;
-  isCustomer = false;
-  user_id = -1;
-  startProgram();
-void logOut(int &user_id, bool &isStaff, bool &isCustomer, bool &isUserRegistered, void (*startProgram)()) {
-  cout << "\nLogging out.." << endl;
-  isUserRegistered = false;
-  isStaff = false;
-  isCustomer = false;
-  user_id = -1;
-  startProgram();
+bool getData(Staff &staff){
+    cout << "Name: "; cin >> staff.name;
+    cout << "Email: "; cin >> staff.email;
+    cout << "Password: "; cin >> staff.password;
+    cout << "Phone Number: "; cin >> staff.phone_number;
+    cout << "Role: "; cin >> staff.role;
+
+    if(isEmpty(staff.name) || isEmpty(staff.email) || isEmpty(staff.password) || isEmpty(staff.phone_number) || isEmpty(staff.role)) {
+        cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;
+        return false;
+    }
+    return true;
+}
+
+bool isAlreadyRegistered(Customer &customer) {
+    for (const Customer& c : customers) {
+        if (c.email == customer.email) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isAlreadyRegistered(Staff &staff) {
+    for (const Staff& s : staffs) {
+        if (s.email == staff.email) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool signUp() {
+    Customer new_customer;
+    Staff new_staff;
+    bool success = false;
+
+    while (!success) {
+        cout << "\nSigning up..." << endl;
+        if(current_user.isCustomer){
+            if(!getData(new_customer)) {
+                cout << "Failed to get customer data. Please try again.\n" << endl;
+                continue;
+            }
+            success = true;
+        } else {
+            if(!getData(new_staff)) {
+                cout << "Failed to get staff data. Please try again.\n" << endl;
+                continue; 
+            }
+            success = true; 
+        }
+
+        // Check if user already exists
+        bool alreadyRegistered = false;
+        if (current_user.isCustomer) {
+            alreadyRegistered = isAlreadyRegistered(new_customer);
+        } else {
+            alreadyRegistered = isAlreadyRegistered(new_staff);
+        }
+
+        if (alreadyRegistered) {
+            cout << "User already registered. Please login.\n" << endl;
+            return false;
+        }
+
+        // Registration
+        if (current_user.isCustomer) {
+            addCustomer(new_customer);
+            cout << "Customer " << new_customer.name << " successfully registered!\n" << endl;
+        } else {
+            addStaff(new_staff);
+            cout << "Staff " << new_staff.name << " successfully registered!\n" << endl;
+        }
+        success = true;
+    }
+
+    return success;
+}
+
+
+
+bool logIn() {
+    string email, password;
+
+    while (true) {
+        cout << "\nLogging in..." << endl;
+        cout << "Email: "; cin >> email;
+        cout << "Password: "; cin >> password;
+
+        if (isEmpty(email) || isEmpty(password)) {
+            cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;
+            continue;
+        }
+
+        if (current_user.isCustomer) {
+            for (const Customer& c : customers) {
+                if (c.email == email && c.password == password) {
+                    cout << "Successfully logged in as Customer!\n" << endl;
+                    current_user.customer_id = c.customer_id;
+                    return true;
+                }
+            }
+        } else {
+            for (const Staff& s : staffs) {
+                if (s.email == email && s.password == password) {
+                    cout << "Successfully logged in as Staff!\n" << endl;
+                    current_user.staff_id = s.staff_id;
+                    return true;
+                }
+            }
+        }
+
+        cout << "Email or password doesn't match!" << endl;
+        cout << "If you don't have an account, please sign up.\n" << endl;
+        return false;
+    }
+}
+
+void logOut(void (*startProgram)()) {
+    cout << "\nLogging out..." << endl;
+    current_user.isStaff = false;
+    current_user.isCustomer = false;
+    current_user.customer_id = -1;
+    current_user.staff_id = -1;
+    if (startProgram) {
+        startProgram();
+    }
 }

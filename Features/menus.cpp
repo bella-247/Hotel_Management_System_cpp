@@ -5,7 +5,6 @@
 #include <climits>
 #include <iostream>
 
-
 using namespace std;
 using namespace std;
 
@@ -19,14 +18,15 @@ void showChoiceError() {
   clearInput();
 }
 
-void showRegistrationMenu(int& staff_id, int& customer_id, bool& isUserRegistered, bool& isStaff, bool& isCustomer) {
+void showRegistrationMenu() {
   int choice;
 
+  cout << "\n********** Registration Menu **********\n";
 typeOfUser:
-  cout << "1, Staff" << endl;
-  cout << "2, Customer" << endl;
-  cout << "Choice the type of user: ";
-  cin >> choice;
+    cout << "1, Staff" << endl;
+    cout << "2, Customer" << endl;
+    cout << "Choice the type of user: ";
+    cin >> choice;
 
   if (cin.fail()) {
     showChoiceError();
@@ -35,12 +35,12 @@ typeOfUser:
 
   switch (choice) {
   case 1:
-    isCustomer = false;
-    isStaff = true;
+    current_user.isCustomer = false;
+    current_user.isStaff = true;
     break;
   case 2:
-    isCustomer = true;
-    isStaff = false;
+    current_user.isCustomer = true;
+    current_user.isStaff = false;
     break;
   default:
     showChoiceError();
@@ -63,21 +63,21 @@ authenticationType:
   case 0:
     goto typeOfUser;
   case 1: {
-    if (isCustomer) {
-      if (!signUp(customer_id, isStaff, isCustomer, isUserRegistered))
+    if (current_user.isCustomer) {
+      if (!signUp())
         goto authenticationType;
     } else {
-      if (!signUp(staff_id, isStaff, isCustomer, isUserRegistered))
+      if (!signUp())
         goto authenticationType;
     }
     break;
   }
   case 2: {
-    if (isCustomer) {
-      if (!logIn(customer_id, isStaff, isCustomer, isUserRegistered))
+    if (current_user.isCustomer) {
+      if (!logIn())
         goto authenticationType;
     } else {
-      if (!logIn(staff_id, isStaff, isCustomer, isUserRegistered))
+      if (!logIn())
         goto authenticationType;
     }
     break;
@@ -88,12 +88,12 @@ authenticationType:
   }
 }
 
-void showStaffMenu(int &staff_id, bool &isStaff, bool &isCustomer,
-                   bool &isUserRegistered, void (*startProgram)()) {
+void showStaffMenu(void (*startProgram)()) {
+                  
   int choice;
 
 menu:
-  cout << "\n********** Hotel Menu **********\n";
+  cout << "\n********** Staff Menu **********\n";
   cout << "1. Display Customers List\n";
   cout << "2. Search Customers by email\n";
   cout << "3. Display Staffs List\n";
@@ -130,7 +130,7 @@ menu:
     showPaymentHistory();
     break;
   case 7:
-    logOut(staff_id, isUserRegistered, isStaff, isCustomer, startProgram);
+    logOut(startProgram);
     break;
   case 8:
     exit(0);
@@ -141,11 +141,10 @@ menu:
   }
 }
 
-void showCustomerMenu(int &customer_id, bool &isStaff, bool &isCustomer,
-                      bool &isUserRegistered, void (*startProgram)()) {
+void showCustomerMenu(void (*startProgram)()) {
   int choice;
 menu:
-  cout << "\n********** Hotel Menu **********\n";
+  cout << "\n********** Customer Menu **********\n";
   cout << "1. Book a Room\n";
   cout << "2. See Available Rooms\n";
   cout << "3. Display Room Details\n";
@@ -179,7 +178,7 @@ menu:
     // Add show profile functionality
     break;
   case 6:
-    logOut(customer_id, isUserRegistered, isStaff, isCustomer, startProgram);
+    logOut(startProgram);
     break;
   case 7:
     exit(0);

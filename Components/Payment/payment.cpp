@@ -1,15 +1,18 @@
 #include "payment.h"
 
 
+// Get payment by ID
 bool getPaymentById(int &payment_id, Payment &payment) {
-    for(Payment payment : payments) {
-        if(payment.payment_id == payment_id) {
+    for(Payment p : payments) {
+        if(p.payment_id == payment_id) {
+            payment = p;
             return true;
         }
     }
     return false;
 }
 
+// Retrieve all the payments from the database
 void getPayments() {
     try {
         string query = "SELECT * FROM Payments;";
@@ -23,6 +26,7 @@ void getPayments() {
     }
 }
 
+// Add payment to the database
 Payment addPayment(int &booking_id, float &amount, bool &is_paid) {
   try {
     string insertQuery =
@@ -44,6 +48,26 @@ Payment addPayment(int &booking_id, float &amount, bool &is_paid) {
   }
 }
 
+//! Update payment status in the database
+// void updatePaymentStatus(int &payment_id, bool &is_paid) {
+//   try {
+//     string updateQuery = "UPDATE Payments SET is_paid = " +
+//                          (is_paid ? "1" : "0") + " WHERE payment_id = " +
+//                          to_string(payment_id) + ";";
+
+//     if (!updateObject(updateQuery)) {
+//       throw runtime_error("Failed to update payment status in database");
+//     }
+
+//     cout << "Payment status updated successfully!" << endl;
+//   } catch (const exception &e) {
+//     cout << "Error: " << e.what() << endl;
+//     exit(1);
+//   }
+// }
+
+
+// Show payment history
 void showPaymentHistory() {
   if (payments.empty()) {
     cout << "No payments recorded.\n";
@@ -62,8 +86,9 @@ void showPaymentHistory() {
   }
 }
 
+// ! Add other invoice informations like customer name, room type, etc.
 void generateInvoice(int &payment_id) {
-    cout << "Invoice for payment ID " << payment_id << endl;
+    cout << "Invoice for payment ID: " << payment_id << endl;
     Payment payment;
     Booking booking;
     Customer customer;
@@ -77,15 +102,14 @@ void generateInvoice(int &payment_id) {
     }
     cout << "----------------------" << endl;
 
-    booking.booking_id = payment.booking_id;
-    customer.customer_id = payment.booking_id;
-    staff.staff_id = payment.booking_id;
-    room.room_id = payment.booking_id;
-    roomtype.room_type_id = payment.booking_id;
+    cout << "Payment ID: " << payment.payment_id << endl;
+    cout << "Booking ID: " << payment.booking_id << endl;
+    cout << "Amount: $" << payment.amount << endl;
+    cout << "Payment Date: " << payment.payment_date << endl;
+    cout << "Status: " << (payment.is_paid ? "Paid" : "Unpaid") << endl;
 }
 
-int PaymentCallback(void *data, int columns, char **values,
-                    char **column_names) {
+int PaymentCallback(void *data, int columns, char **values, char **column_names) {
   vector<Payment> *payments = static_cast<vector<Payment> *>(data);
 
   Payment payment;
@@ -95,11 +119,8 @@ int PaymentCallback(void *data, int columns, char **values,
   payment.amount = atof(values[2]);
   payment.payment_date = values[3];
 
-  payment.is_paid =
-      (values[4] != nullptr &&
-       strcmp(values[4], "1") == 0); // check if the value is not null and if it
+  payment.is_paid = (values[4] != nullptr && strcmp(values[4], "1") == 0); // check if the value is not null and if it
                                      // is equal to "1" (true) or "0" (false)
-
   payments->push_back(payment);
 
   return 0;

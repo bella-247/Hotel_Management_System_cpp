@@ -1,5 +1,15 @@
 #include "customer.h"
 
+bool getCustomerById(int& customer_id, Customer& customer){
+  for(Customer c : customers) {
+        if(c.customer_id == customer_id) {
+            customer = c;
+            return true;
+        }
+    }
+    return false;
+}
+
 void getCustomers() {
   try {
     string query = "SELECT * FROM Customers;";
@@ -25,6 +35,7 @@ Customer addCustomer(Customer& customer) {
     }
 
     cout << "Customer " << customer.name << " created successfully!" << endl;
+    current_user.customer_id = customers.back().customer_id;
     return customers.back();
   } catch (const exception &e) {
     cout << "Error: " << e.what() << endl;

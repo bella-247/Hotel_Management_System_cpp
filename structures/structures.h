@@ -7,14 +7,13 @@
 
 using namespace std;
 
-// Staff structure
-
+// User structure to store user data
 struct User {
-    int customer_id, staff_id;
-    bool isCustomer, isStaff, isUserRegistered;
+    int customer_id = -1, staff_id = -1;
+    bool isCustomer, isStaff;
 };
 
-
+// Staff structure
 struct Staff {
     int staff_id = -1;
     string name, role, email, password, phone_number;
@@ -57,23 +56,16 @@ struct Payment {
     bool is_paid;
 };
 
+// User state manager 
+extern User current_user;
 
+// Global vectors to store data
 extern vector<Staff> staffs;
 extern vector<RoomType> roomtypes;
 extern vector<Room> rooms;
 extern vector<Customer> customers;
 extern vector<Booking> bookings;
 extern vector<Payment> payments;
-extern User current_user;
-
-
-// Function declarations for initialization
-// void initializeStaff(vector<Staff>& staffs);
-// void initializeCustomers(vector<Customer> &customers);
-// void initializeRoomTypes(vector<RoomType>& room_types);
-// void initializeRooms(vector<Room>& rooms, vector<RoomType>& room_types);
-// void initializeBookings(vector<Booking>& bookings, vector<Customer>& customers, vector<Room>& rooms);
-// void initializePayments(vector<Payment>& payments, vector<Booking>& bookings);
 
 #endif // STRUCTURES_H
 

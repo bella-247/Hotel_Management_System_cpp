@@ -11,10 +11,17 @@
                 "Features/menus.cpp",
                 "Auth/authentication.cpp",
                 "Database/database.cpp",
+                "Components/Customer/customer.cpp",
                 "Components/Payment/payment.cpp",
+                "Components/Staff/staff.cpp",
+                "Components/Room/room.cpp",
+                "Components/Booking/booking.cpp",
                 "-o",
                 "main",
-                "-I."
+                "-I.",
+                "-IDatabase/sqlite3",
+                "-LDatabase",
+                "-lsqlite3"
             ],
             "group": {
                 "kind": "build",

@@ -1,13 +1,20 @@
+#ifndef AUTHENTICATION_H
+#define AUTHENTICATION_H
+
 #include "../Components/Customer/customer.h"
+#include "../Components/Staff/staff.h"
 #include "../Structures/structures.h"
 #include <vector>
 
-
 using namespace std;
 
-bool logIn(int &user_id, bool &isStaff, bool &isCustomer,
-           bool &isUserRegistered);
-void logOut(int &user_id, bool &isStaff, bool &isCustomer,
-            bool &isUserRegistered, void (*startProgram)());
-bool signUp(int &user_id, bool &isStaff, bool &isCustomer,
-            bool &isUserRegistered);
+bool isEmpty(const string &str);
+bool getData(Customer &customer);
+bool getData(Staff &staff);
+bool isAlreadyRegistered(Customer &customer);
+bool isAlreadyRegistered(Staff &staff);
+bool signUp();
+bool logIn();
+void logOut(void (*startProgram)());
+
+#endif

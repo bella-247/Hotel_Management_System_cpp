@@ -12,6 +12,7 @@
 
 using namespace std;
 
+bool getCustomerById(int& customer_id, Customer& customer);
 void getCustomers();
 Customer addCustomer(Customer& customer);
 void removeCustomer(int& customer_id);

@@ -9,8 +9,8 @@
 
 using namespace std;
 
-void showRegistrationMenu(int &staff_id, int &customer_id, bool &isUserRegistered, bool &isStaff, bool &isCustomer);
-void showStaffMenu(int &staff_id, bool &isStaff, bool &isCustomer, bool &isUserRegistered, void (*startProgram)());
-void showCustomerMenu(int &customer_id, bool &isStaff, bool &isCustomer, bool &isUserRegistered, void (*startProgram)());
+void showRegistrationMenu();
+void showStaffMenu(void (*startProgram)());
+void showCustomerMenu(void (*startProgram)());
 
 #endif

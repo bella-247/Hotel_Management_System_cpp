@@ -1,24 +1,10 @@
-#include "Auth/authentication.h"
-#include "Components/Customer/customer.h"
-#include "Components/Payment/payment.h"
-#include "Database/database.h"
-#include "Features/menus.h"
-#include "Structures/structures.h"
-#include <iomanip>
-#include <iostream>
-#include <string>
+#include "main.h"
 
-
-using namespace std;
-
-// --------------------- global variables ----------------- //
-bool isUserRegistered = false;
-bool isStaff = false, isCustomer = false;
-int customer_id, staff_id;
-
+// Retrieve data from database or initialize data if database is empty
 void retrieveDatabaseData() {
   getCustomers(); // retrieve the customers that are in the database
-  getPayments();
+  getPayments(); // retrieve the payments that are in the database
+  getStaffs(); // retrieve the staffs that are in the database
 }
 
 void startProgram() {
@@ -28,16 +14,13 @@ void startProgram() {
   cout << "============================================\n";
 
   while (true) {
-    if (!isUserRegistered) {
-      showRegistrationMenu(staff_id, customer_id, isUserRegistered, isStaff,
-                           isCustomer);
+    if (current_user.customer_id == -1 && current_user.staff_id == -1) {
+      showRegistrationMenu();
     } else {
-      if (isCustomer) {
-        showCustomerMenu(customer_id, isStaff, isCustomer, isUserRegistered,
-                         startProgram);
+      if (current_user.isCustomer) {
+        showCustomerMenu(startProgram);
       } else {
-        showStaffMenu(staff_id, isStaff, isCustomer, isUserRegistered,
-                      startProgram);
+        showStaffMenu(startProgram);
       }
     }
   }
@@ -46,8 +29,7 @@ void startProgram() {
 int main() {
   connectToDatabase();
   createTables();
-  retrieveDatabaseData(); // Retrieve data from database or initialize data if
-                          // database
+  retrieveDatabaseData(); 
 
   startProgram();
 

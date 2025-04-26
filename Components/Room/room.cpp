@@ -1,4 +1,4 @@
-#include "rooms.h"
+#include "room.h"
 
 void showAvailableRooms(){
     cout << "Available Rooms" << endl;
@@ -11,6 +11,9 @@ void showAvailableRooms(){
         }
     }
     if(!found){
-        cout << "No available rooms";
+        cout << "No available rooms" << endl;
     }
 }
+
+
+//! will also deal with the room types component

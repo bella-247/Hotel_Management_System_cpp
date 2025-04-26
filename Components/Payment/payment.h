@@ -9,7 +9,6 @@
 #include <stdexcept>
 #include "../../Structures/structures.h"
 #include "../../Database/database.h"
-#include "../../Global/globals.h"
 using namespace std;
 
 bool getPaymentById(int& payment_id, Payment& payment);
