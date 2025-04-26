@@ -9,6 +9,7 @@ vector<Room> rooms;
 vector<Customer> customers;
 vector<Booking> bookings;
 vector<Payment> payments;
+User current_user;
 
 
 

@@ -7,6 +7,7 @@
 
 
 using namespace std;
+using namespace std;
 
 void clearInput() {
   cin.clear();
@@ -18,9 +19,7 @@ void showChoiceError() {
   clearInput();
 }
 
-void showRegistrationMenu(int &staff_id, int &customer_id,
-                          bool &isUserRegistered, bool &isStaff,
-                          bool &isCustomer) {
+void showRegistrationMenu(int& staff_id, int& customer_id, bool& isUserRegistered, bool& isStaff, bool& isCustomer) {
   int choice;
 
 typeOfUser:
