@@ -1,63 +1,55 @@
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include "Database/database.h"
-#include "Structures/structures.h"
 #include "Auth/authentication.h"
-#include "Features/features.h"
+#include "Components/Customer/customer.h"
+#include "Components/Payment/payment.h"
+#include "Database/database.h"
 #include "Features/menus.h"
-#include "Systems/Payment/payment.h"
+#include "Structures/structures.h"
+#include <iomanip>
+#include <iostream>
+#include <string>
+
 
 using namespace std;
 
 // --------------------- global variables ----------------- //
-int customer_id, staff_id;
 bool isUserRegistered = false;
 bool isStaff = false, isCustomer = false;
+int customer_id, staff_id;
 
-// declare vectors 
-vector<Staff> staffs;
-vector<RoomType> room_types;
-vector<Room> rooms;
-vector<Customer> customers;
-vector<Booking> bookings;
-vector<Payment> payments;
-
-// Global database instance
-HotelDatabase* g_database = nullptr;
-
-void initializeDatabase();
-
-int main() {
-    g_database = new HotelDatabase();
-    
-    main:
-        cout << "\n============================================\n";
-        cout << "\033[1;32m" << "         Welcome to Utopia Hotel        " << "\033[0m\n";
-        cout << "============================================\n";
-
-        while(true) {
-            if (!isUserRegistered) {
-                showRegistrationMenu(customer_id, staff_id, isUserRegistered, isStaff, isCustomer, customers, staffs);
-            }
-            else {
-                if(isCustomer) {
-                    showCustomerMenu(customers);  // Pass customers vector
-                }
-                else {
-                    showStaffMenu(customers);     // Pass customers vector
-                }
-            }
-        }
-
-    delete g_database;
-    return 0;
+void retrieveDatabaseData() {
+  getCustomers(); // retrieve the customers that are in the database
+  getPayments();
 }
 
-void initializeDatabase() {
-    initializeRoomTypes(room_types);
-    initializeRooms(rooms, room_types);
-    initializeCustomers(customers);
-    initializeBookings(bookings, customers, rooms);
-    initializePayments(payments, bookings);
+void startProgram() {
+  cout << "\n============================================\n";
+  cout << "\033[1;32m" << "         Welcome to Utopia Hotel        "
+       << "\033[0m\n";
+  cout << "============================================\n";
+
+  while (true) {
+    if (!isUserRegistered) {
+      showRegistrationMenu(staff_id, customer_id, isUserRegistered, isStaff,
+                           isCustomer);
+    } else {
+      if (isCustomer) {
+        showCustomerMenu(customer_id, isStaff, isCustomer, isUserRegistered,
+                         startProgram);
+      } else {
+        showStaffMenu(staff_id, isStaff, isCustomer, isUserRegistered,
+                      startProgram);
+      }
+    }
+  }
+}
+
+int main() {
+  connectToDatabase();
+  createTables();
+  retrieveDatabaseData(); // Retrieve data from database or initialize data if
+                          // database
+
+  startProgram();
+
+  return 0;
 }

@@ -62,7 +62,7 @@
     "string": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "if (Test-Path main.exe) { Remove-Item main.exe }; g++ main.cpp Structures/structures.cpp Features/menus.cpp Features/features.cpp Auth/authentication.cpp Database/database.cpp Systems/Payment/payment.cpp Systems/Customer/customer.cpp -o main.exe -I. -IDatabase/sqlite3 -LDatabase -lsqlite3; ./main.exe"
+    "cpp": "if (Test-Path main.exe) { Remove-Item main.exe }; g++ main.cpp Structures/structures.cpp Features/menus.cpp Auth/authentication.cpp Database/database.cpp Components/Payment/payment.cpp Components/Customer/customer.cpp -o main.exe -I. -IDatabase/sqlite3 -LDatabase -lsqlite3; ./main.exe"
   },
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,

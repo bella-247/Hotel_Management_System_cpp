@@ -12,8 +12,11 @@
 
 using namespace std;
 
-Customer createCustomer(vector<Customer> &customers, string &name, string &email, string &password, string &phone_number);
-void showCustomers(const vector<Customer> &customers);
+void getCustomers();
+Customer addCustomer(Customer& customer);
+void removeCustomer(int& customer_id);
+void showCustomers();
 int CustomerCallback(void*, int, char**, char**);
 
 #endif
+

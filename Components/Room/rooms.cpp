@@ -1,11 +1,6 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include "../Structures/structures.h"
+#include "rooms.h"
 
-using namespace std;
-
-void showAvailableRooms(vector<Room> &rooms){
+void showAvailableRooms(){
     cout << "Available Rooms" << endl;
     bool found = false;
 
@@ -19,4 +14,3 @@ void showAvailableRooms(vector<Room> &rooms){
         cout << "No available rooms";
     }
 }
-

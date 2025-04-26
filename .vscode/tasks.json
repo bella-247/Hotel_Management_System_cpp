@@ -9,10 +9,9 @@
                 "main.cpp",
                 "Structures/structures.cpp",
                 "Features/menus.cpp",
-                "Features/features.cpp",
                 "Auth/authentication.cpp",
                 "Database/database.cpp",
-                "Systems/Payment/payment.cpp",
+                "Components/Payment/payment.cpp",
                 "-o",
                 "main",
                 "-I."
