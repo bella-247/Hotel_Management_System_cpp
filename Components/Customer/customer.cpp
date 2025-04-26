@@ -1,13 +1,13 @@
 #include "customer.h"
 
-bool getCustomerById(int& customer_id, Customer& customer){
-  for(Customer c : customers) {
-        if(c.customer_id == customer_id) {
-            customer = c;
-            return true;
-        }
+bool getCustomerById(int &customer_id, Customer &customer) {
+  for (Customer c : customers) {
+    if (c.customer_id == customer_id) {
+      customer = c;
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 void getCustomers() {
@@ -24,11 +24,13 @@ void getCustomers() {
   }
 }
 
-Customer addCustomer(Customer& customer) {
+Customer addCustomer(Customer &customer) {
   try {
-    string insertQuery = "INSERT INTO Customers (name, email, password, phone_number) VALUES ('" +
-                        customer.name + "', '" + customer.email + "', '" + customer.password + "', '" +
-                        customer.phone_number + "');";
+    string insertQuery = "INSERT INTO Customers (name, email, password, "
+                         "phone_number) VALUES ('" +
+                         customer.name + "', '" + customer.email + "', '" +
+                         customer.password + "', '" + customer.phone_number +
+                         "');";
 
     if (!insertObject(insertQuery, "Customers", CustomerCallback, &customers)) {
       throw runtime_error("Failed to create customer in database");
@@ -82,16 +84,16 @@ void showCustomers() {
   }
 
   cout << "\n--- Customer List ---\n";
-  cout << left << setw(12) << "Customer ID" << setw(20) << "Name" << setw(30) << "Email"
-       << setw(15) << "Phone" << endl;
+  cout << left << setw(12) << "Customer ID" << setw(20) << "Name" << setw(30)
+       << "Email" << setw(15) << "Phone" << endl;
 
   cout << string(77, '-') << endl;
 
   for (int i = customers.size() - 1; i > -1; --i) {
     const Customer &customer = customers.at(i);
-    cout << left << setw(12) << customer.customer_id << setw(20) << customer.name
-         << setw(30) << customer.email << setw(15) << customer.phone_number
-         << endl;
+    cout << left << setw(12) << customer.customer_id << setw(20)
+         << customer.name << setw(30) << customer.email << setw(15)
+         << customer.phone_number << endl;
   }
 }
 

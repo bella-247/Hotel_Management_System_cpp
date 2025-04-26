@@ -6,6 +6,11 @@
 #include <string>
 #include "../Structures/structures.h"
 #include "../Auth/authentication.h"
+#include "../Components/Customer/customer.h"
+#include "../Components/Staff/staff.h"
+#include "../Components/Payment/payment.h"
+#include "../Components/Booking/booking.h"
+#include "../Components/Room/room.h"
 
 using namespace std;
 

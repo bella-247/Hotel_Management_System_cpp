@@ -1,5 +1,7 @@
 #include "authentication.h"
 
+
+// helper functions 
 bool isEmpty(const string &str) {
     for(char c : str) {
         if (!isspace(c)) {
@@ -8,12 +10,17 @@ bool isEmpty(const string &str) {
     }
     return str.empty();
 }
+void cleanInput(){
+    cin.clear();
+    cin.ignore(INT_MAX, '\n');
+}
 
 bool getData(Customer &customer){
-    cout << "Name: "; cin >> customer.name;
-    cout << "Email: "; cin >> customer.email;
-    cout << "Password: "; cin >> customer.password;
-    cout << "Phone Number: "; cin >> customer.phone_number;
+    cleanInput();
+    cout << "Name: "; getline(cin, customer.name);
+    cout << "Email: "; getline(cin, customer.email);
+    cout << "Password: "; getline(cin, customer.password);
+    cout << "Phone Number: "; getline(cin, customer.phone_number);
 
     if (isEmpty(customer.name) || isEmpty(customer.email) || isEmpty(customer.password) || isEmpty(customer.phone_number)) {
         cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;
@@ -23,11 +30,12 @@ bool getData(Customer &customer){
 }
 
 bool getData(Staff &staff){
-    cout << "Name: "; cin >> staff.name;
-    cout << "Email: "; cin >> staff.email;
-    cout << "Password: "; cin >> staff.password;
-    cout << "Phone Number: "; cin >> staff.phone_number;
-    cout << "Role: "; cin >> staff.role;
+    cleanInput();
+    cout << "Name: ";  getline(cin, staff.name);
+    cout << "Email: "; getline(cin, staff.email);
+    cout << "Password: "; getline(cin, staff.password);
+    cout << "Phone Number: "; getline(cin, staff.phone_number);
+    cout << "Role: "; getline(cin, staff.role);
 
     if(isEmpty(staff.name) || isEmpty(staff.email) || isEmpty(staff.password) || isEmpty(staff.phone_number) || isEmpty(staff.role)) {
         cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;
@@ -109,8 +117,9 @@ bool logIn() {
 
     while (true) {
         cout << "\nLogging in..." << endl;
-        cout << "Email: "; cin >> email;
-        cout << "Password: "; cin >> password;
+        cleanInput();
+        cout << "Email: "; getline(cin, email);
+        cout << "Password: "; getline(cin, password);
 
         if (isEmpty(email) || isEmpty(password)) {
             cout << "Empty fields detected. Please fill all fields correctly.\n" << endl;

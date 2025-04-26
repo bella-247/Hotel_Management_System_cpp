@@ -167,6 +167,7 @@ menu:
     break;
   case 2:
     // Add show available rooms functionality
+    showAvailableRooms();
     break;
   case 3:
     // Add show room details functionality
