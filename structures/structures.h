@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "../Database/database.h"
 
 using namespace std;
 
@@ -51,11 +52,11 @@ struct Payment {
 
 // Function declarations for initialization
 void initializeStaff(vector<Staff>& staffs);
+void initializeCustomers(vector<Customer> &customers);
 void initializeRoomTypes(vector<RoomType>& room_types);
 void initializeRooms(vector<Room>& rooms, vector<RoomType>& room_types);
-void initializeCustomers(vector<Customer>& customers);
 void initializeBookings(vector<Booking>& bookings, vector<Customer>& customers, vector<Room>& rooms);
 void initializePayments(vector<Payment>& payments, vector<Booking>& bookings);
 
-
 #endif // STRUCTURES_H
+

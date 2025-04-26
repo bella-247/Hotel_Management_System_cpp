@@ -1,25 +1,9 @@
 #include "database.h"
 #include "../Structures/structures.h"
 
-HotelDatabase::HotelDatabase() : db(nullptr) {
-    if (!connectToDatabase()) {
-        cerr << "Failed to connect to the database." << endl;
-        exitProgram();
-    }
-    if (!createTables()) {
-        cerr << "Failed to create tables." << endl;
-        exitProgram();
-    }
-}
+sqlite3* db;
 
-HotelDatabase::~HotelDatabase() {
-    if (db) {
-        sqlite3_close(db);
-        cout << "Database closed successfully." << endl;
-    }
-}
-
-bool HotelDatabase::connectToDatabase() {
+bool connectToDatabase() {
     int resultCode = sqlite3_open("hotel_database.sqlite3", &db);
     if (resultCode != SQLITE_OK) {
         cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
@@ -29,7 +13,7 @@ bool HotelDatabase::connectToDatabase() {
     return true;
 }
 
-bool HotelDatabase::createTables() {
+bool createTables() {
     const string query = R"(
         CREATE TABLE IF NOT EXISTS Customers(
             customer_id INTEGER PRIMARY KEY, 
@@ -97,7 +81,7 @@ bool HotelDatabase::createTables() {
     return executeQuery(query);
 }
 
-bool HotelDatabase::executeQuery(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
+bool executeQuery(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
     char* err_msg = nullptr;
     int resultCode = sqlite3_exec(db, query.c_str(), callback, data, &err_msg);
     if (resultCode != SQLITE_OK) {
@@ -108,25 +92,35 @@ bool HotelDatabase::executeQuery(const string& query, int (*callback)(void*, int
     return true;
 }
 
-bool HotelDatabase::getObject(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
+bool getObject(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
     return executeQuery(query, callback, data);
 }
 
-bool HotelDatabase::getObjects(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
+bool getObjects(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
     return executeQuery(query, callback, data);
 }
 
-bool HotelDatabase::insertObject(const string& query, const string& tableName, int (*callback)(void*, int, char**, char**), void* data) {
+bool insertObject(const string& query, const string& tableName, int (*callback)(void*, int, char**, char**), void* data) {
     if (!executeQuery(query)) return false;
 
     sqlite3_int64 lastId = sqlite3_last_insert_rowid(db);
+
     string selectQuery = "SELECT * FROM " + tableName + " WHERE rowid = " + to_string(lastId);
+
     return executeQuery(selectQuery, callback, data);
 }
 
-void HotelDatabase::exitProgram() {
+bool deleteObject(const string& query){
+    return executeQuery(query);
+}
+
+
+void closeDatabase(){
     if (db) {
         sqlite3_close(db);
     }
+}
+void exitProgram() {
+    closeDatabase();
     exit(EXIT_FAILURE);
 }
