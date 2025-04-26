@@ -1,14 +1,14 @@
 #include "staff.h"
 
 // Get staff by ID
-bool getStaffById(int& staff_id, Staff& staff){
-  for(Staff s : staffs) {
-        if(s.staff_id == staff_id) {
-            staff = s;
-            return true;
-        }
+bool getStaffById(int &staff_id, Staff &staff) {
+  for (Staff s : staffs) {
+    if (s.staff_id == staff_id) {
+      staff = s;
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 // Retrieve all the staffs from the database
@@ -26,17 +26,20 @@ void getStaffs() {
   }
 }
 
-Staff addStaff(Staff& staff) {
+Staff addStaff(Staff &staff) {
   try {
-    string insertQuery = "INSERT INTO Staff (name, email, password, phone_number, role) VALUES ('" +
-                        staff.name + "', '" + staff.email + "', '" + staff.password + "', '" +
-                        staff.phone_number + "', '" + staff.role + "');";
+    string insertQuery = "INSERT INTO Staff (name, email, password, "
+                         "phone_number, role) VALUES ('" +
+                         staff.name + "', '" + staff.email + "', '" +
+                         staff.password + "', '" + staff.phone_number + "', '" +
+                         staff.role + "');";
 
     if (!insertObject(insertQuery, "Staff", StaffCallback, &staffs)) {
       throw runtime_error("Failed to create staff in database");
     }
 
     cout << "Staff < " << staff.name << " > created successfully!" << endl;
+    current_user.staff_id = staffs.back().staff_id;
     return staffs.back();
   } catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
@@ -47,8 +50,7 @@ Staff addStaff(Staff& staff) {
 void removeStaff(int &staff_id) {
   try {
     string deleteQuery =
-        "DELETE FROM Staff WHERE staff_id = " + to_string(staff_id) +
-        ";";
+        "DELETE FROM Staff WHERE staff_id = " + to_string(staff_id) + ";";
 
     if (!deleteObject(deleteQuery)) {
       throw runtime_error("Failed to delete staff from database");
@@ -83,17 +85,17 @@ void showStaffs() {
   }
 
   cout << "\n--- Staff List ---\n";
-  cout << left << setw(12) << "Staff ID" << setw(20) << "Name" << setw(30) << "Email"
-       << setw(15) << "Phone" << setw(10) << "Role" << endl;
+  cout << left << setw(12) << "Staff ID" << setw(20) << "Name" << setw(30)
+       << "Email" << setw(15) << "Phone" << setw(10) << "Role" << endl;
 
   cout << string(77, '-') << endl;
 
   for (int i = staffs.size() - 1; i > -1; --i) {
     const Staff &staff = staffs.at(i);
-    
+
     cout << left << setw(12) << staff.staff_id << setw(20) << staff.name
-         << setw(30) << staff.email << setw(15) << staff.phone_number << setw(10) << staff.role
-         << endl;
+         << setw(30) << staff.email << setw(15) << staff.phone_number
+         << setw(10) << staff.role << endl;
   }
 }
 
