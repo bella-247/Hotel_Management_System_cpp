@@ -1,5 +1,60 @@
 #include "customer.h"
 
+
+// helper functions
+
+bool isCustomerAlreadyRegistered(Customer &customer) {
+  for (const Customer &c : customers) {
+    if (c.email == customer.email) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool getCustomerData(Customer &customer) {
+  cleanInput();
+  while (true) {
+    cout << "Name: ";
+    getline(cin, customer.name);
+    cout << "Email: ";
+    getline(cin, customer.email);
+    cout << "Password: ";
+    getline(cin, customer.password);
+    cout << "Phone Number: ";
+    getline(cin, customer.phone_number);
+
+    // if any of the fields are empty i want them to insert again
+    if (isEmpty(customer.name) || isEmpty(customer.email) ||
+        isEmpty(customer.password) || isEmpty(customer.phone_number)) {
+      cout << "Empty fields detected. Please fill all fields correctly.\n"
+           << endl;
+      continue;
+    }
+    // if the customer already exists i want to return to the menu
+    if (isCustomerAlreadyRegistered(customer)) {
+      cout << "Customer already registered. Please try again.\n" << endl;
+      return false;
+    }
+    return true;
+  }
+}
+
+int findCustomer() {
+  string email;
+  cout << "Enter the email of the customer: ";
+  cleanInput();
+  getline(cin, email);
+
+  for (Customer c : customers) {
+    if (c.email == email) {
+      return c.customer_id;
+    }
+  }
+  cout << "Customer not found." << endl;
+  return -1;
+}
+
 bool getCustomerById(int &customer_id, Customer &customer) {
   for (Customer c : customers) {
     if (c.customer_id == customer_id) {
@@ -10,21 +65,15 @@ bool getCustomerById(int &customer_id, Customer &customer) {
   return false;
 }
 
-void getCustomers() {
-  try {
-    string query = "SELECT * FROM Customers;";
 
-    if (!getObjects(query, CustomerCallback, &customers)) {
-      throw runtime_error("Error when retrieving all the customers");
-    }
-    cout << "Customers initialized successfully." << endl;
-  } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
-    exit(1);
+// main functions
+
+Customer addCustomer() {
+  Customer customer;
+  if(!getCustomerData(customer)){
+    return Customer();
   }
-}
 
-Customer addCustomer(Customer &customer) {
   try {
     string insertQuery = "INSERT INTO Customers (name, email, password, "
                          "phone_number) VALUES ('" +
@@ -37,46 +86,66 @@ Customer addCustomer(Customer &customer) {
     }
 
     cout << "Customer " << customer.name << " created successfully!" << endl;
-    current_user.customer_id = customers.back().customer_id;
     return customers.back();
-  } catch (const exception &e) {
+  } 
+  catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
-    exit(1);
+    exitProgram();
+    return Customer(); // Return an empty Customer object in case of error
   }
 }
 
-void removeCustomer(int &customer_id) {
+void removeCustomer() {
+  string email;
+  cleanInput();
+  cout << "Enter the email of the customer to remove: ";
+  getline(cin, email);
+
+  bool found = false;
+  for (int i = 0; i < customers.size(); ++i) {
+    if (customers.at(i).email == email) {
+      customers.erase(customers.begin() + i);
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    cout << "Customer not found." << endl;
+    return;
+  }
+  
   try {
-    string deleteQuery =
-        "DELETE FROM Customers WHERE customer_id = " + to_string(customer_id) +
-        ";";
+    string deleteQuery = "DELETE FROM Customers WHERE email = '" + email + "';";
 
     if (!deleteObject(deleteQuery)) {
       throw runtime_error("Failed to delete customer from database");
     }
 
-    bool found = false;
-    for (int i = 0; customers.size(); ++i) {
-      if (customers.at(i).customer_id == customer_id) {
-        customers.erase(customers.begin() + i);
-        found = true;
-        break;
-      }
-    }
-    if (found) {
-      cout << "Customer deleted successfully!" << endl;
-    } else {
-      cout << "Couldn't find the specified customer!" << endl;
-    }
-    return;
+    cout << "Customer deleted successfully!" << endl;
   }
-
   catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
-    exit(1);
+    exitProgram();
   }
 }
 
+// Show the profile of the current customer
+void showCustomerProfile(int &customer_id) {
+  Customer customer;
+  if (!getCustomerById(customer_id, customer)) {
+    cout << "Customer not found." << endl;
+    return;
+  }
+
+  cout << "\n--- Customer Profile ---\n";
+
+  cout << "\tCustomer ID: " << customer.customer_id << endl;
+  cout << "\tName: " << customer.name << endl;
+  cout << "\tEmail: " << customer.email << endl;
+  cout << "\tPhone Number: " << customer.phone_number << endl;
+}
+
+// Print the list of customers in tabular format in reverse order
 void showCustomers() {
   if (customers.empty()) {
     cout << "No customers registered.\n";
@@ -94,6 +163,24 @@ void showCustomers() {
     cout << left << setw(12) << customer.customer_id << setw(20)
          << customer.name << setw(30) << customer.email << setw(15)
          << customer.phone_number << endl;
+  }
+}
+
+
+// database functions
+
+// get customers from the database
+void getCustomers() {
+  try {
+    string query = "SELECT * FROM Customers;";
+
+    if (!getObjects(query, CustomerCallback, &customers)) {
+      throw runtime_error("Error when retrieving all the customers");
+    }
+    cout << "Customers initialized successfully." << endl;
+  } catch (const exception &e) {
+    cout << "Error: " << e.what() << endl;
+    exitProgram();
   }
 }
 

@@ -13,7 +13,8 @@ using namespace std;
 
 bool getPaymentById(int& payment_id, Payment& payment);
 void getPayments();
-Payment addPayment(int &booking_id, float &amount, bool &is_paid);
+Payment addPayment();
+void removePayment();
 void showPaymentHistory();
 void generateInvoice(int &payment_id);
 int PaymentCallback(void*, int, char**, char**);

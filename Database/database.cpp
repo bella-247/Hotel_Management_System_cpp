@@ -1,19 +1,19 @@
 #include "database.h"
 
-sqlite3* db;
+sqlite3 *db;
 
 bool connectToDatabase() {
-    int resultCode = sqlite3_open("hotel_database.sqlite3", &db);
-    if (resultCode != SQLITE_OK) {
-        cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
-        exitProgram();
-        return false;
-    }
-    return true;
+  int resultCode = sqlite3_open("hotel_database.sqlite3", &db);
+  if (resultCode != SQLITE_OK) {
+    cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
+    exitProgram();
+    return false;
+  }
+  return true;
 }
 
 bool createTables() {
-    const string query = R"(
+  const string query = R"(
         CREATE TABLE IF NOT EXISTS Customers(
             customer_id INTEGER PRIMARY KEY, 
             name TEXT NOT NULL,
@@ -77,49 +77,58 @@ bool createTables() {
         );
     )";
 
-    return executeQuery(query);
+  return executeQuery(query);
 }
 
-bool executeQuery(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
-    char* err_msg = nullptr;
-    int resultCode = sqlite3_exec(db, query.c_str(), callback, data, &err_msg);
-    if (resultCode != SQLITE_OK) {
-        cerr << "Error executing query: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        return false;
-    }
-    return true;
+bool executeQuery(const string &query,
+                  int (*callback)(void *, int, char **, char **), void *data) {
+  char *err_msg = nullptr;
+  int resultCode = sqlite3_exec(db, query.c_str(), callback, data, &err_msg);
+  if (resultCode != SQLITE_OK) {
+    cerr << "Error executing query: " << err_msg << endl;
+    sqlite3_free(err_msg);
+    return false;
+  }
+  return true;
 }
 
-bool getObject(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
-    return executeQuery(query, callback, data);
+bool getObject(const string &query,
+               int (*callback)(void *, int, char **, char **), void *data) {
+  return executeQuery(query, callback, data);
 }
 
-bool getObjects(const string& query, int (*callback)(void*, int, char**, char**), void* data) {
-    return executeQuery(query, callback, data);
+bool getObjects(const string &query,
+                int (*callback)(void *, int, char **, char **), void *data) {
+  return executeQuery(query, callback, data);
 }
 
-bool insertObject(const string& query, const string& tableName, int (*callback)(void*, int, char**, char**), void* data) {
-    if (!executeQuery(query)) return false;
+bool insertObject(const string &query, const string &tableName,
+                  int (*callback)(void *, int, char **, char **), void *data) {
+  if (!executeQuery(query))
+    return false;
 
-    sqlite3_int64 lastId = sqlite3_last_insert_rowid(db);
+  sqlite3_int64 lastId = sqlite3_last_insert_rowid(db);
 
-    string selectQuery = "SELECT * FROM " + tableName + " WHERE rowid = " + to_string(lastId);
+  string selectQuery =
+      "SELECT * FROM " + tableName + " WHERE rowid = " + to_string(lastId);
 
-    return executeQuery(selectQuery, callback, data);
+  return executeQuery(selectQuery, callback, data);
 }
 
-bool deleteObject(const string& query){
-    return executeQuery(query);
-}
+bool updateObject(const string &query) { return executeQuery(query); }
 
+bool deleteObject(const string &query) { return executeQuery(query); }
 
-void closeDatabase(){
-    if (db) {
-        sqlite3_close(db);
-    }
+void closeDatabase() {
+  if (db) {
+    sqlite3_close(db);
+  }
 }
 void exitProgram() {
-    closeDatabase();
-    exit(EXIT_FAILURE);
+  closeDatabase();
+
+  char c;
+  cout << "\nPress any key to exit..." << endl;
+  cin >> c;      // pause the program to see the output on the console
+  exit(0); // exit the program successfully
 }

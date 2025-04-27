@@ -7,12 +7,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <climits>
 #include <stdexcept>
 using namespace std;
 
 bool isEmpty(const string &str);
-void cleanInput();
 bool getData(Customer &customer);
 bool getData(Staff &staff);
 bool isAlreadyRegistered(Customer &customer);

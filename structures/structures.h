@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <climits>
 #include "../Database/database.h"
 
 using namespace std;
@@ -11,6 +12,7 @@ using namespace std;
 struct User {
     int customer_id = -1, staff_id = -1;
     bool isCustomer, isStaff;
+    int room_id = -1;
 };
 
 // Staff structure
@@ -24,14 +26,13 @@ struct RoomType {
     int room_type_id = -1;
     string type_name;
     float price;
-    int num_of_rooms, rooms_range_start, rooms_range_end;
 };
 
 // Room structure
 struct Room {
     int room_id = -1;
     int room_number;
-    RoomType room_type;
+    int room_type_id;
     bool is_available;
 };
 
@@ -55,6 +56,13 @@ struct Payment {
     string payment_date;
     bool is_paid;
 };
+
+
+
+bool isEmpty(const string &str);
+void cleanInput();
+void showChoiceError();
+
 
 // User state manager 
 extern User current_user;

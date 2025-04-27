@@ -5,6 +5,8 @@ void retrieveDatabaseData() {
   getCustomers(); // retrieve the customers that are in the database
   getPayments(); // retrieve the payments that are in the database
   getStaffs(); // retrieve the staffs that are in the database
+  getRooms(); // retrieve the rooms that are in the database
+  getRoomTypes(); // retrieve the room types that are in the database
 }
 
 void startProgram() {

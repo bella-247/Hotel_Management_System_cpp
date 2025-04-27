@@ -14,8 +14,15 @@
 
 using namespace std;
 
+void showChoiceError();
 void showRegistrationMenu();
 void showStaffMenu(void (*startProgram)());
 void showCustomerMenu(void (*startProgram)());
+
+void CustomersMenu();
+void StaffsMenu();
+void RoomsMenu();
+void BookingsMenu();
+void PaymentsMenu();
 
 #endif

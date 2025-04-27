@@ -18,18 +18,14 @@ CREATE TABLE Staff (
     phone_number TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Note: ON UPDATE not supported in SQLite
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS RoomTypes;
 CREATE TABLE RoomTypes (
     room_type_id INTEGER PRIMARY KEY,
-    type_name TEXT NOT NULL,
+    type_name TEXT NOT NULL UNIQUE,
     price REAL NOT NULL,
-    num_of_rooms INTEGER NOT NULL,
-    rooms_range_start INTEGER NOT NULL UNIQUE,
-    rooms_range_end INTEGER NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

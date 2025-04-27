@@ -12,12 +12,15 @@
 
 using namespace std;
 
+bool isCustomerAlreadyRegistered(Customer &customer);
+bool getCustomerData(Customer &customer);
+int findCustomer();
 bool getCustomerById(int& customer_id, Customer& customer);
 void getCustomers();
-Customer addCustomer(Customer& customer);
-void removeCustomer(int& customer_id);
+Customer addCustomer();
+void removeCustomer();
 void showCustomers();
+void showCustomerProfile(int& customer_id = current_user.customer_id);
 int CustomerCallback(void*, int, char**, char**);
 
 #endif
-
