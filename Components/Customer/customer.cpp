@@ -1,6 +1,6 @@
 #include "customer.h"
 
-
+using namespace std;
 // helper functions
 
 bool isCustomerAlreadyRegistered(Customer &customer) {

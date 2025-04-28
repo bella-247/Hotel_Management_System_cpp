@@ -381,41 +381,45 @@ void RoomsMenu(){
 //   }
 // }
 
-// void PaymentsMenu(){
-// 	int choice;
-// 	  while(true){
-// 		cout << "\n\n********** Payments Menu **********\n\n";
-// 		cout << "1, Add Payment" << endl;
-// 		cout << "2, Remove Payment" << endl;
-// 		cout << "3, Show Payments History" << endl;
-// 		cout << "4, Back to Main Menu" << endl;
-// 		cout << "5, Exit" << endl;
+void PaymentsMenu(){
+	int choice;
+	  while(true){
+		cout << "\n\n********** Payments Menu **********\n\n";
+		cout << "0, Previous menu" << endl;
+		cout << "1, Add Payment" << endl;
+		cout << "2, Show Payments History" << endl;
+		cout << "3, Show Payment by Booking ID" << endl;
+		cout << "4, Generate Invoice" << endl;
+		cout << "5, Exit" << endl;
 
-// 		cout << "Enter your choice: ";
-// 		cin >> choice;
+		cout << "Enter your choice: ";
+		cin >> choice;
 
-// 		if (cin.fail() || choice < 1 || choice > 5) {
-// 		  showChoiceError();
-// 		  continue;
-// 		}
+		if (cin.fail() || choice < 0 || choice > 5) {
+		  showChoiceError();
+		  continue;
+		}
 
-// 		switch (choice) {
-// 		case 1:
-// 		  addPayment();
-// 		  break;
-// 		case 2:
-// 		  removePayment();
-// 		  break;
-// 		case 3:
-// 		  showPaymentHistory();
-// 		  break;
-// 		case 4:
-// 		  return; // go back to main menu
-// 		case 5:
-// 		  exitProgram();
-// 		  break;
-// 		default:
-// 		  showChoiceError();
-// 		}
-// 	  }
-// }
+		switch (choice) {
+		case 0:
+			return;
+		case 1:
+		  addPayment();
+		  break;
+		case 2:
+		  showPaymentHistory();
+		  break;
+		case 3:
+			showPaymentByBookingId();
+			break;
+		case 4:
+			generateInvoice();
+			break;
+		case 5:
+		  exitProgram();
+		  break;
+		default:
+		  showChoiceError();
+		}
+	  }
+}

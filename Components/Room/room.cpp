@@ -230,6 +230,7 @@ void leaveRoom() {
 
 
 
+
 // Show all rooms function
 void showRooms() {
     string query = "SELECT * FROM Rooms;";

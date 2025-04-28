@@ -166,9 +166,9 @@ int RoomTypeCallback(void *data, int columns, char **values,
     vector<RoomType> *roomtypes = static_cast<vector<RoomType> *>(data);
 
     RoomType roomtype;
-    roomtype.room_type_id = atoi(values[0]);
-    roomtype.type_name = values[1];;
-    roomtype.price = atof(values[2]);
+    roomtype.room_type_id = values[0] ? atoi(values[0]) : -1;
+    roomtype.type_name = values[1] ? values[1] : "";
+    roomtype.price = values[2] ? atof(values[2]) : -1;
 
     roomtypes->push_back(roomtype);
     return 0;
