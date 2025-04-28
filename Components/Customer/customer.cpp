@@ -40,25 +40,19 @@ bool getCustomerData(Customer &customer) {
   }
 }
 
-int findCustomer() {
-  string email;
-  cout << "Enter the email of the customer: ";
-  cleanInput();
-  getline(cin, email);
-
-  for (Customer c : customers) {
-    if (c.email == email) {
-      return c.customer_id;
-    }
-  }
-  cout << "Customer not found." << endl;
-  return -1;
-}
-
 bool getCustomerById(int &customer_id, Customer &customer) {
-  for (Customer c : customers) {
+  for (Customer &c : customers) {
     if (c.customer_id == customer_id) {
       customer = c;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool getCustomerByEmail(string email, Customer &customer){
+  for (Customer &c : customers) {
+    if (c.email == email) {
       return true;
     }
   }
@@ -137,12 +131,28 @@ void showCustomerProfile(int &customer_id) {
     return;
   }
 
-  cout << "\n--- Customer Profile ---\n";
+  cout << "\n\n--- Customer Profile ---\n\n";
 
   cout << "\tCustomer ID: " << customer.customer_id << endl;
   cout << "\tName: " << customer.name << endl;
   cout << "\tEmail: " << customer.email << endl;
   cout << "\tPhone Number: " << customer.phone_number << endl;
+}
+
+bool findCustomer() {
+  Customer customer;
+  string email;
+  cout << "Enter the email of the customer: ";
+  cleanInput();
+  getline(cin, email);
+
+  if(!getCustomerByEmail(email, customer)){
+    return false;
+    cout << "Customer not found." << endl;
+  }
+
+  showCustomerProfile(customer.customer_id);
+  return true;
 }
 
 // Print the list of customers in tabular format in reverse order
@@ -152,9 +162,9 @@ void showCustomers() {
     return;
   }
 
-  cout << "\n--- Customer List ---\n";
-  cout << left << setw(12) << "Customer ID" << setw(20) << "Name" << setw(30)
-       << "Email" << setw(15) << "Phone" << endl;
+  cout << "\n\n --- Customer List --- \n\n";
+  cout << left << setw(10) << "Customer ID" << setw(20) << "Name" << setw(20)
+       << "Email" << setw(20) << "Phone" << endl;
 
   cout << string(77, '-') << endl;
 
@@ -177,7 +187,6 @@ void getCustomers() {
     if (!getObjects(query, CustomerCallback, &customers)) {
       throw runtime_error("Error when retrieving all the customers");
     }
-    cout << "Customers initialized successfully." << endl;
   } catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
     exitProgram();

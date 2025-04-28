@@ -21,84 +21,52 @@ bool getPaymentByBookingId(int &booking_id, Payment &payment) {
   return false;
 }
 
-
-// Retrieve all the payments from the database
-void getPayments() {
-  try {
-    string query = "SELECT * FROM Payments;";
-    if (!getObjects(query, PaymentCallback, &payments)) {
-      throw runtime_error("Error when retrieving all the payments");
-    }
-  } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
-    exitProgram();
-  }
-}
-
 // Add payment to the database
 Payment addPayment() {
-  int booking_id;
-  float amount;
-  bool is_paid;
-  cout << "Booking Id: "; cin >> booking_id;
-  cout << "Amount: "; cin >> amount;
-  cout << "Is Paid (1 for Yes, 0 for No): "; cin >> is_paid;
+  Payment payment;
+  Booking booking;
+
+  cout << "Booking Id: "; cin >> payment.booking_id;
+  cout << "Amount: "; cin >> payment.amount;
   
   if (cin.fail()) {
     showChoiceError();
     return Payment(); 
   }
 
+  if(payment.amount < 0){
+    cout << "Invalid amount " << endl;
+    return Payment();
+  }
 
-  for(Payment &p : payments) {
-    if (p.booking_id == booking_id) {
-      cout << "Payment already exists for this booking." << endl;
-      return Payment();
-    }
+  if(getPaymentByBookingId(payment.booking_id, payment)){
+    cout << "Payment already exists for this Booking. " << endl;
+    return Payment();
+  }
+
+  if(!getBookingById(payment.booking_id, booking)){
+    cout << "Booking not found." << endl;
+    return Payment();
   }
 
   try {
     string insertQuery =
-        "INSERT INTO Payments (booking_id, amount, is_paid) VALUES (" +
-        to_string(booking_id) + ", " + to_string(amount) + ", " +
-        (is_paid ? "TRUE" : "FALSE") + ");";
+        "INSERT INTO Payments (booking_id, amount) VALUES (" +
+        to_string(payment.booking_id) + ", " + to_string(payment.amount) + ");";
 
     // Use g_database instance to call insertObject
     if (!insertObject(insertQuery, "Payments", PaymentCallback, &payments)) {
       throw runtime_error("Failed to create payment in database");
     }
 
-    cout << "Payment of $" << amount << " received for Booking ID "
-         << booking_id << endl;
+    cout << "Payment of $" << payment.amount << " received for Booking ID "
+         << payment.booking_id << endl;
     return payments.back();
   } 
   catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
     exitProgram();
     return Payment(); // Return an empty Payment object in case of error
-  }
-}
-
-void updatePaymentStatus(int &payment_id, bool &is_paid) {
-  Payment payment;
-  if (!getPaymentById(payment_id, payment)) {
-    cout << "Payment not found" << endl;
-    return;
-  }
-
-  try {
-    string updateQuery = "UPDATE Payments SET is_paid = " +
-                         (is_paid ? "TRUE" : "FALSE") + " WHERE payment_id = " +
-                         to_string(payment_id) + ";";
-
-    if (!updateObject(updateQuery)) {
-      throw runtime_error("Failed to update payment status in database");
-    }
-
-    cout << "Payment status updated successfully!" << endl;
-  } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
-    exitProgram();
   }
 }
 
@@ -121,11 +89,8 @@ void showPaymentByBookingId(){
   cout << "Booking ID: " << payment.booking_id << endl;
   cout << "Amount: $" << payment.amount << endl;
   cout << "Payment Date: " << payment.payment_date << endl;
-  cout << "Status: " << (payment.is_paid ? "Paid" : "Unpaid") << endl;
 }
 
-
-// Show payment history
 void showPaymentHistory() {
   if (payments.empty()) {
     cout << "No payments recorded.\n";
@@ -133,19 +98,16 @@ void showPaymentHistory() {
   }
 
   cout << "\n--- Payment History ---\n";
-  cout << setw(10) << "Payment ID" << setw(10) << "Booking ID" << setw(10)
-       << "Amount" << setw(15) << "Payment Date" << setw(10) << "Status"
-       << endl;
+  cout << left << setw(10) << "Payment ID" << setw(10) << "Booking ID" << setw(10)
+       << "Amount" << setw(15) << "Payment Date" << endl;
   for (int i = payments.size() - 1; i > -1; --i) {
     const Payment &payment = payments.at(i);
-    cout << setw(10) << payment.payment_id << 
+    cout << left << setw(10) << payment.payment_id << 
             setw(10) << payment.booking_id << 
-            setw(10) << payment.amount << setw(15) << payment.payment_date << 
-            setw(10) << (payment.is_paid ? "Paid" : "Unpaid") << endl;
+            setw(10) << payment.amount << setw(15) << payment.payment_date << endl;
   }
 }
 
-// ! Add other invoice informations like customer name, room type, etc.
 void generateInvoice() {
   int payment_id;
   cout << "Enter the payment id: ";
@@ -196,28 +158,37 @@ void generateInvoice() {
 
   cout << "Payment ID: " << payment.payment_id << endl;
   cout << "Booking ID: " << payment.booking_id << endl;
-  cout << "Booking Date " << booking.booking_date << endl << endl << endl;
 
   cout << "----- Customer Details -----" << endl;
   cout << "Customer ID: " << booking.customer_id << endl;
-  cout << "Customer Name: " << customre.name << endl;
+  cout << "Customer Name: " << customer.name << endl;
   cout << "Customer Email: " << customer.email << endl << endl << endl;
 
   cout << "----- Room Details -----" << endl; 
   cout << "Room Number: " << room.room_number << endl;
   cout << "Room Type: " << roomtype.type_name << endl << endl << endl;
 
+  cout << "Check-in Date: " << booking.check_in << endl;
+  cout << "Check-out Date: " << booking.check_out << endl << endl << endl;
 
-  cout << "Check-in Date: " << booking.check_in_date << endl;
-  cout << "Check-out Date: " << booking.check_out_date << endl << endl << endl;
-
-  
-  cout << "Total Price: $" << payment.amount << endl;
+  cout << "Price: $" << payment.amount << endl;
   cout << "Payment Date: " << payment.payment_date << endl;
-  cout << "Status: " << (payment.is_paid ? "Paid" : "Unpaid") << endl;
 }
 
 
+
+// database functions 
+void getPayments() {
+  try {
+    string query = "SELECT * FROM Payments;";
+    if (!getObjects(query, PaymentCallback, &payments)) {
+      throw runtime_error("Error when retrieving all the payments");
+    }
+  } catch (const exception &e) {
+    cout << "Error: " << e.what() << endl;
+    exitProgram();
+  }
+}
 
 int PaymentCallback(void *data, int columns, char **values,
                     char **column_names) {
@@ -229,7 +200,6 @@ int PaymentCallback(void *data, int columns, char **values,
   payment.booking_id = values[1] ? atoi(values[1]) : -1;
   payment.amount = values[2] ? atof(values[2]) : -1;
   payment.payment_date = values[3] ? values[3] : "";
-  payment.is_paid = (values[4] != nullptr && strcmp(values[4], "1") == 0); // check if the value is not null and if it is equal to "1" (true) or "0" (false)
 
   payments->push_back(payment);
 

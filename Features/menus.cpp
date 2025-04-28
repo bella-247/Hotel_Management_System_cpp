@@ -117,6 +117,10 @@ void showCustomerMenu(void (*startProgram)()) {
 			int room_number;
 			cout << "Enter the room number: ";
 			cin >> room_number;
+			if(cin.fail()){
+				showChoiceError();
+				return;
+			}
 			showRoomDetails(room_number);
 		}
 	  break;
@@ -224,14 +228,12 @@ void CustomersMenu() {
       showCustomers();
       break;
     case 4: {
-      int customer_id = findCustomer();
-      if (customer_id != -1) {
-        showCustomerProfile(customer_id);
+		findCustomer();
+		break;
       };
-    } break;
+    break;
     case 5:
       exitProgram();
-      break;
     default:
       showChoiceError();
     }
@@ -338,48 +340,59 @@ void RoomsMenu(){
 	  }
 }
 
-// void BookingsMenu() {
-//   int choice;
-//   while (true) {
-//     cout << "\n\n********** Bookings Menu **********\n\n";
-//     cout << "1, Add Booking" << endl;
-//     cout << "2, Remove Booking" << endl;
-//     cout << "3, Show Bookings" << endl;
-//     cout << "4, Find Booking by User email and Room number" << endl;
-//     cout << "5, Back to Main Menu" << endl;
-//     cout << "6, Exit" << endl;
+void BookingsMenu() {
+  int choice;
+  while (true) {
+    cout << "\n\n********** Bookings Menu **********\n\n";
+	cout << "0, Previous Menu" << endl;
+    cout << "1, Add Booking" << endl;
+    cout << "2, Show All Bookings" << endl;
+	cout << "3, Show Customer Bookings" << endl;
+	cout << "4, Show Room Bookings" << endl;
+    cout << "5, Find Booking by Customer email and Room number" << endl;
+	cout << "6, Show Booking Details " << endl;
+    cout << "7, Exit" << endl;
 
-//     cout << "Enter your choice: ";
-//     cin >> choice;
+    cout << "Enter your choice: ";
+    cin >> choice;
 
-//     if (cin.fail() || choice < 1 || choice > 6) {
-//       showChoiceError();
-//       continue;
-//     }
+    if (cin.fail() || choice < 0 || choice > 7) {
+      showChoiceError();
+      continue;
+    }
 
-//     switch (choice) {
-//     case 1:
-//       addBooking();
-//       break;
-//     case 2:
-//       removeBooking();
-//       break;
-//     case 3:
-//       showBookings();
-//       break;
-//     case 4:
-//       findBooking();
-//       break;
-//     case 5:
-//       return; // go back to main menu
-//     case 6:
-//       exitProgram();
-//       break;
-//     default:
-//       showChoiceError();
-//     }
-//   }
-// }
+    switch (choice) {
+	case 0:
+		return;
+    case 1:
+      addBooking();
+      break;
+    case 2:
+      showBookings();
+      break;
+	case 3:
+		showCustomerBookings();
+		break;
+	case 4:
+		showRoomBookings();
+		break;
+    case 5:
+      findBooking();
+      break;
+    case 6:
+		{
+			int booking_id;		
+			showBookingDetails(booking_id);
+		}
+      break;
+    case 7:
+      exitProgram();
+      break;
+    default:
+      showChoiceError();
+    }
+  }
+}
 
 void PaymentsMenu(){
 	int choice;

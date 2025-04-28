@@ -268,7 +268,7 @@ void showUsersList() {
     cout << "\n\nList of People in this Hotel\n\n";
 
     cout << left << setw(10) << "Room No." << setw(20) << "Name" << setw(10) << "Id" << setw(15) << "Phone Number" << setw(10) << "Room Types";
-    cout << setw(10 + 20 + 10 + 15 + 10 + 5) << setfill('-') << "\n";
+    cout << left << setw(10 + 20 + 10 + 15 + 10 + 5) << setfill('-') << "\n";
     cout << setfill(' ') << endl;
 
     int room_type = 0;

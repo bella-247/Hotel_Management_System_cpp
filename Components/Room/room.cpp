@@ -12,9 +12,9 @@ bool getRoomById(int room_id, Room &room) {
   return false;
 }
 
-bool getRoomByRoomNumber(int room_id, Room &room) {
+bool getRoomByRoomNumber(int room_number, Room &room) {
   for (Room &r : rooms) {
-    if (r.room_number == room_id) {
+    if (r.room_number == room_number) {
       room = r;
       return true;
     }
@@ -55,9 +55,9 @@ Room addRoom() {
 
     // display all the available room types
     cout << "Available Room types " << endl;
-    cout << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
+    cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
     for(RoomType &rt : roomtypes){
-        cout << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
+        cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
     }
 
     cout << "Enter the room type id: ";
@@ -122,7 +122,6 @@ void removeRoom() {
   }
 }
 
-
 void bookRoom() {
     if(current_user.room_id != -1){
         cout << "You already booked a room." << endl;
@@ -170,7 +169,7 @@ void bookRoom() {
 void showAvailableRooms() {
     
     cout << "\n\n--- Available Rooms ---\n\n";
-    cout << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
+    cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
     << "Room Type" << endl;
     
   for (const Room &room : rooms) {
@@ -180,9 +179,41 @@ void showAvailableRooms() {
     
     RoomType roomtype;
     getRoomTypeById(room.room_type_id, roomtype);
-    cout << "Room ID: " << room.room_id << "  Room Number: " << room.room_number << " Room Type: " << roomtype.type_name << endl;
+    cout << left << setw(10) << room.room_id << setw(10) << room.room_number << setw(10) << roomtype.type_name << endl;
   }
 }
+
+void showRoomsByTypes(){
+  cout << "Room Types: " << endl;
+  cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
+  for(RoomType &rt : roomtypes){
+      cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
+  }
+
+  cout << "Enter the room type id: ";
+  int room_type_id;
+  cin >> room_type_id;
+  if(cin.fail()){
+      showChoiceError();
+      return;
+  }
+
+  RoomType roomtype;
+  if(getRoomTypeById(room_type_id, roomtype)){
+      cout << "Room Type not found." << endl;
+      return;
+  }
+
+  cout << "\n\n --- Rooms of " << roomtype.type_name << " --- \n\n" << endl;
+  cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << endl;
+  
+  for(Room &r : rooms){
+      if(r.room_type_id == room_type_id){
+          cout << left << setw(10) << r.room_id << setw(10) << r.room_number << endl;
+      }
+  }
+}
+
 
 // show the properties of a room
 void showRoomDetails(int room_number) {
@@ -230,7 +261,6 @@ void leaveRoom() {
 
 
 
-
 // Show all rooms function
 void showRooms() {
     string query = "SELECT * FROM Rooms;";
@@ -266,7 +296,6 @@ void getRooms() {
     if (!getObjects(query, RoomCallback, &rooms)) {
       throw runtime_error("Error when retrieving all the rooms");
     }
-    cout << "Rooms initialized successfully." << endl;
   } catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
     exitProgram();

@@ -14,13 +14,14 @@ using namespace std;
 
 bool isStaffAlreadyRegistered(Staff &staff);
 bool getStaffData(Staff &staff);
-int findStaff();
 bool getStaffById(int& staff_id, Staff& staff);
-void getStaffs();
+bool getStaffByEmail(string email, Staff& staff);
 Staff addStaff();
 void removeStaff();
+bool findStaff();
 void showStaffs();
 void showStaffProfile(int& staff_id = current_user.staff_id);
+void getStaffs();
 int StaffCallback(void*, int, char**, char**);
 
 #endif

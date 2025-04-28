@@ -44,9 +44,8 @@ struct Customer {
 
 // Booking structure
 struct Booking {
-    int booking_id = -1, customer_id, room_id;
-    string check_in_date, check_out_date;
-    float total_price;
+    int booking_id = -1, customer_id, room_id, staff_id;
+    string check_in, check_out;
 };
 
 // Payment structure
@@ -54,9 +53,7 @@ struct Payment {
     int payment_id = -1, booking_id;
     float amount;
     string payment_date;
-    bool is_paid;
 };
-
 
 
 bool isEmpty(const string &str);

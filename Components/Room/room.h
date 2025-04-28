@@ -24,6 +24,7 @@ void removeRoom();
 // room functions
 void bookRoom();
 void showAvailableRooms();
+void showRoomsByTypes();
 void showRoomDetails(int room_number);
 void leaveRoom();
 

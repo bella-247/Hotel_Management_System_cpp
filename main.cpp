@@ -7,6 +7,7 @@ void retrieveDatabaseData() {
   getStaffs(); // retrieve the staffs that are in the database
   getRooms(); // retrieve the rooms that are in the database
   getRoomTypes(); // retrieve the room types that are in the database
+  getBookings();  
 }
 
 void startProgram() {

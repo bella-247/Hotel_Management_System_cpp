@@ -39,26 +39,21 @@ bool getStaffData(Staff &staff) {
   }
 }
 
-int findStaff() {
-  string email;
-  cout << "Enter the email of the staff: ";
-  cleanInput();
-  getline(cin, email);
-
-  for (Staff s : staffs) {
-    if (s.email == email) {
-      return s.staff_id;
-    }
-  }
-  cout << "Staff not found." << endl;
-  return -1;
-}
 
 // Get staff by ID
 bool getStaffById(int &staff_id, Staff &staff) {
-  for (Staff s : staffs) {
+  for (Staff &s : staffs) {
     if (s.staff_id == staff_id) {
       staff = s;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool getStaffByEmail(string email, Staff &staff){
+  for (Staff &s : staffs) {
+    if (s.email == email) {
       return true;
     }
   }
@@ -130,6 +125,7 @@ void removeStaff() {
   }
 }
 
+
 void showStaffProfile(int &staff_id) {
   Staff staff;
   if (!getStaffById(staff_id, staff)) {
@@ -143,7 +139,23 @@ void showStaffProfile(int &staff_id) {
   cout << "\tName: " << staff.name << endl;
   cout << "\tEmail: " << staff.email << endl;
   cout << "\tPhone Number: " << staff.phone_number << endl;
-  cout << "\tRole: " << staff.role << endl;
+}
+
+
+bool findStaff() {
+  Staff staff;
+  string email;
+  cout << "Enter the email of the staff: ";
+  cleanInput();
+  getline(cin, email);
+
+  if(!getStaffByEmail(email, staff)){
+    return false;
+    cout << "Staff not found." << endl;
+  }
+
+  showStaffProfile(staff.staff_id);
+  return true;
 }
 
 void showStaffs() {
@@ -161,8 +173,8 @@ void showStaffs() {
   for (int i = staffs.size() - 1; i > -1; --i) {
     const Staff &staff = staffs.at(i);
 
-    cout << left << setw(12) << staff.staff_id << setw(20) << staff.name
-         << setw(30) << staff.email << setw(15) << staff.phone_number
+    cout << left << setw(10) << staff.staff_id << setw(20) << staff.name
+         << setw(20) << staff.email << setw(20) << staff.phone_number
          << setw(10) << staff.role << endl;
   }
 }
@@ -180,7 +192,7 @@ void getStaffs() {
     if (!getObjects(query, StaffCallback, &staffs)) {
       throw runtime_error("Error when retrieving all the staffs");
     }
-    cout << "Staffs initialized successfully." << endl;
+
   } catch (const exception &e) {
     cout << "Error: " << e.what() << endl;
     exitProgram();

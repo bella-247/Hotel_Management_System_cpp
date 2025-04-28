@@ -9,14 +9,25 @@
 #include <stdexcept>
 #include "../../Structures/structures.h"
 #include "../../Database/database.h"
+
+// Components 
+#include "../Booking/booking.h"
+#include "../Customer/customer.h"
+#include "../Room/room.h"
+#include "../Staff/staff.h"
+
 using namespace std;
 
+
 bool getPaymentById(int& payment_id, Payment& payment);
-void getPayments();
+bool getPaymentByBookingId(int& booking_id, Payment& payment);
+
 Payment addPayment();
-void removePayment();
+void updatePaymentStatus();
 void showPaymentHistory();
-void generateInvoice(int &payment_id);
+void generateInvoice();
+void showPaymentByBookingId();
+void getPayments();
 int PaymentCallback(void*, int, char**, char**);
 
 #endif
