@@ -52,7 +52,9 @@ authentication:
 
 		switch (choice) {
 		case 0:
-		goto userType;
+			current_user.isCustomer = false;
+			current_user.isStaff = false;
+			goto userType;
 		case 1: {
 		if (current_user.isCustomer) {
 			if (!signUp())
@@ -175,10 +177,10 @@ void showStaffMenu(void (*startProgram)()) {
 		RoomsMenu();
 		break;
 	  case 4:
-		// BookingsMenu();
+		BookingsMenu();
 		break;
 	  case 5:
-		// PaymentsMenu(); // Implement PaymentsMenu functionality
+		PaymentsMenu();
 		break;
 	  case 6:
 		logOut(startProgram);
@@ -297,12 +299,12 @@ void RoomsMenu(){
 		cout << "5, Add Room Type" << endl;
 		cout << "6, Remove Room Type" << endl;
 		cout << "7, Show Room Types" << endl;
-		cout << "9, Exit" << endl;
+		cout << "8, Exit" << endl;
 
 		cout << "Enter your choice: ";
 		cin >> choice;
 
-		if (cin.fail() || choice < 0 || choice > 9) {
+		if (cin.fail() || choice < 0 || choice > 8) {
 		  showChoiceError();
 		  continue;
 		}

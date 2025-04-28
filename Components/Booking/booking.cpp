@@ -72,6 +72,7 @@ Booking addBooking(){
     getline(cin, customer_email);
     cout << "Enter staff email: ";
     getline(cin, staff_email);
+    cout << "Enter the room number: ";
     cin >> room_number;
 
     cout << "Enter check_in year (yyyy) : "; cin >> check_in.year;
@@ -79,8 +80,8 @@ Booking addBooking(){
     cout << "Enter check_in date (dd) : "; cin >> check_in.date;
 
     cout << endl << "Enter check_out year (yyyy): "; cin >> check_out.year;
-    cout << endl << "Enter check_out month (mm): "; cin >> check_out.month;
-    cout << endl << "Enter check_out date (dd): "; cin >> check_out.date;
+    cout << "Enter check_out month (mm): "; cin >> check_out.month;
+    cout << "Enter check_out date (dd): "; cin >> check_out.date;
     
     if(cin.fail()){
         showChoiceError();
@@ -253,7 +254,6 @@ void showBookings(){
             setw(10) << staff.name << setw(10) << b.check_in << setw(10) << b.check_out;
     }
 }
-
 
 // database functions
 
