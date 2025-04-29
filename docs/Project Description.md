@@ -1,12 +1,3 @@
----
-marp: true
-style:
-    section: {
-        font-size: 0.8em;
-    }
----
-
-
 # Hotel Management System
 ---
 
