@@ -7,6 +7,7 @@
 #include <string>
 #include <stdexcept>
 #include "../../Structures/structures.h"
+#include "../../Features/Messages/messages.h"
 #include "../../Database/database.h"
 #include "roomtypes.h"
 

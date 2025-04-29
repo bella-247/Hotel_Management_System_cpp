@@ -3,7 +3,7 @@
 void showRegistrationMenu() {
   int choice;
 
-  cout << "\n\n********** Registration Menu **********\n\n";
+  showHighlight("********** Registration Menu **********");
 
 userType:
 // choose the type of the user
@@ -40,13 +40,16 @@ authentication:
 // choose the method of registration (sign up or log in)
 	while(current_user.customer_id == -1 && current_user.staff_id == -1) {
 		cout << "0, Previous menu" << endl;
-		cout << "1, Sign Up " << endl;
-		cout << "2, Log In " << endl;
+		cout << "1, Log In " << endl;
+		if(current_user.isCustomer){
+			cout << "2, Sign Up " << endl;
+		}
+
 		cout << "Choose from the above: ";
 		cin >> choice;
 
-		if (cin.fail()) {
-		showChoiceError();
+		if (cin.fail() || (current_user.isStaff && choice == 2)) {
+			showChoiceError();
 		continue;
 		}
 
@@ -56,24 +59,14 @@ authentication:
 			current_user.isStaff = false;
 			goto userType;
 		case 1: {
-		if (current_user.isCustomer) {
-			if (!signUp())
-			continue;
-		} else {
-			if (!signUp())
-			continue;
-		}
-		break;
+			logIn();
+			break;
 		}
 		case 2: {
-		if (current_user.isCustomer) {
-			if (!logIn())
-			continue;
-		} else {
-			if (!logIn())
-			continue;
-		}
-		break;
+			if (current_user.isCustomer) {
+				signUp();
+			}
+			break;
 		}
 		default:
 		showChoiceError();
@@ -86,13 +79,13 @@ void showCustomerMenu(void (*startProgram)()) {
   int choice;
 
   while (true) {
-	cout << "\n\n********** Main Menu **********\n\n";
+	showHighlight("********** Customer Menu **********");
 	cout << "1, Book a Room" << endl;
 	cout << "2, See Room Types" << endl;
 	cout << "3, See Available Rooms" << endl;
 	cout << "4, Display Room Details" << endl;
 	cout << "5, Leave Room" << endl;
-	cout << "6, Show Profile" << endl;
+	cout << "6, Show User Profile" << endl;
 	cout << "7, Logout" << endl;
 	cout << "8, Exit" << endl;
 
@@ -146,22 +139,21 @@ void showCustomerMenu(void (*startProgram)()) {
 }
 
 void showStaffMenu(void (*startProgram)()) {
-
-	
 	int choice;
   while(true){
-	  cout << "\n\n********** Main Menu **********\n\n";
+	  showHighlight("********* Staff Menu **********");
 	  cout << "1, Customers" << endl;
 	  cout << "2, Staffs" << endl;
 	  cout << "3, Rooms" << endl;
 	  cout << "4, Bookings" << endl;
 	  cout << "5, Payments" << endl;
-	  cout << "6, Logout" << endl;
-	  cout << "7, Exit" << endl;
+	  cout << "6, Show User Profile" << endl;
+	  cout << "7, Logout" << endl;
+	  cout << "8, Exit" << endl;
 	  cout << "Enter your choice: ";
 	  cin >> choice;
 
-	  if (cin.fail() || choice < 1 || choice > 7) {
+	  if (cin.fail()) {
 		showChoiceError();
 		continue;
 	  }
@@ -171,7 +163,12 @@ void showStaffMenu(void (*startProgram)()) {
 		CustomersMenu();
 		break;
 	  case 2:
-		StaffsMenu();
+		  if(current_user.isAdmin){
+			  StaffsMenu();
+		  }
+		  else{
+			showWarning("You are not allowed to view this menu ");
+		  }
 		break;
 	  case 3:
 		RoomsMenu();
@@ -183,9 +180,12 @@ void showStaffMenu(void (*startProgram)()) {
 		PaymentsMenu();
 		break;
 	  case 6:
+		  showStaffProfile();
+		  break;
+	  case 7:
 		logOut(startProgram);
 		break;
-	  case 7:
+	  case 8:
 		exitProgram();
 		break;
 	  default:
@@ -194,14 +194,10 @@ void showStaffMenu(void (*startProgram)()) {
   }
 }
 
-// those are the submenus of the staff menu
-// they will be called when the user selects the corresponding option
-// give me suggestions what to add in each of them
-
 void CustomersMenu() {
   int choice;
   while (true) {
-    cout << "\n\n********** Customers Menu **********\n\n";
+    showHighlight("********** Customers Menu **********");
     cout << "0, Previous menu" << endl;
     cout << "1, Add Customer" << endl;
     cout << "2, Remove Customer" << endl;
@@ -212,7 +208,7 @@ void CustomersMenu() {
     cout << "Enter your choice: ";
     cin >> choice;
 
-    if (cin.fail() || choice < 0 || choice > 5) {
+    if (cin.fail()) {
       showChoiceError();
       continue;
     }
@@ -245,7 +241,7 @@ void CustomersMenu() {
 void StaffsMenu() {
   int choice;
   while (true) {
-    cout << "\n\n********** Staffs Menu **********\n\n";
+    showHighlight("********** Staffs Menu **********");
     cout << "0, Previous menu" << endl;
     cout << "1, Add Staff " << endl;
     cout << "2, Remove Staff" << endl;
@@ -256,7 +252,7 @@ void StaffsMenu() {
     cout << "Enter your choice: ";
     cin >> choice;
 
-    if (cin.fail() || choice < 0 || choice > 5) {
+    if (cin.fail()) {
       showChoiceError();
       continue;
     }
@@ -274,10 +270,7 @@ void StaffsMenu() {
       showStaffs();
       break;
     case 4: {
-      int staff_id = findStaff();
-      if (staff_id != -1) {
-        showStaffProfile(staff_id);
-      };
+		findStaff();
     } break;
     case 5:
       exitProgram();
@@ -290,21 +283,22 @@ void StaffsMenu() {
 void RoomsMenu(){
 	int choice;
 	  while(true){
-		cout << "\n\n********** Rooms Menu **********\n\n";
+		showHighlight("********** Rooms Menu **********");
 		cout << "0, Previous menu" << endl;
 		cout << "1, Add Room" << endl;
 		cout << "2, Remove Room" << endl;
-		cout << "3, Show Rooms" << endl;
-		cout << "4, Show Available Rooms" << endl;
-		cout << "5, Add Room Type" << endl;
-		cout << "6, Remove Room Type" << endl;
-		cout << "7, Show Room Types" << endl;
-		cout << "8, Exit" << endl;
+		cout << "3, Show Available Rooms" << endl;
+		cout << "4, Show Rooms" << endl;
+		cout << "5, Show Room By Types" << endl;
+		cout << "6, Add Room Type" << endl;
+		cout << "7, Remove Room Type" << endl;
+		cout << "8, Show Room Types" << endl;
+		cout << "9, Exit" << endl;
 
 		cout << "Enter your choice: ";
 		cin >> choice;
 
-		if (cin.fail() || choice < 0 || choice > 8) {
+		if (cin.fail()) {
 		  showChoiceError();
 		  continue;
 		}
@@ -319,21 +313,23 @@ void RoomsMenu(){
 		  removeRoom();
 		  break;
 		case 3:
-		  showRooms();
-		  break;
-		case 4:
 			showAvailableRooms();
 		break;
+		case 4:
+			showRooms();
+		break;
 		case 5:
+			showRoomsByTypes();
+		case 6:
 			addRoomType();
 		break;
-		case 6:
+		case 7:
 			removeRoomType();
 			break;
-		case 7:
+		case 8:
 			showRoomTypes();
 		  break;
-		case 8:
+		case 9:
 		  exitProgram();
 		  break;
 		default:
@@ -345,7 +341,7 @@ void RoomsMenu(){
 void BookingsMenu() {
   int choice;
   while (true) {
-    cout << "\n\n********** Bookings Menu **********\n\n";
+    showHighlight("********** Bookings Menu **********");
 	cout << "0, Previous Menu" << endl;
     cout << "1, Add Booking" << endl;
     cout << "2, Show All Bookings" << endl;
@@ -358,7 +354,7 @@ void BookingsMenu() {
     cout << "Enter your choice: ";
     cin >> choice;
 
-    if (cin.fail() || choice < 0 || choice > 7) {
+    if (cin.fail()) {
       showChoiceError();
       continue;
     }
@@ -399,7 +395,7 @@ void BookingsMenu() {
 void PaymentsMenu(){
 	int choice;
 	  while(true){
-		cout << "\n\n********** Payments Menu **********\n\n";
+		showHighlight("********** Payments Menu **********");
 		cout << "0, Previous menu" << endl;
 		cout << "1, Add Payment" << endl;
 		cout << "2, Show Payments History" << endl;
@@ -410,7 +406,7 @@ void PaymentsMenu(){
 		cout << "Enter your choice: ";
 		cin >> choice;
 
-		if (cin.fail() || choice < 0 || choice > 5) {
+		if (cin.fail()) {
 		  showChoiceError();
 		  continue;
 		}

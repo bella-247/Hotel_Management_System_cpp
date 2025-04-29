@@ -11,10 +11,9 @@ void retrieveDatabaseData() {
 }
 
 void startProgram() {
-  cout << "\n============================================\n";
-  cout << "\033[1;32m" << "         Welcome to Utopia Hotel        "
-       << "\033[0m\n";
-  cout << "============================================\n";
+  cout << "\n\n============================================";
+  showHighlight("Welcome to the Hotel Management System");
+  cout << "============================================\n\n";
 
   while (true) {
     if (current_user.customer_id == -1 && current_user.staff_id == -1) {

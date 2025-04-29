@@ -49,12 +49,12 @@ Room addRoom() {
     }
 
     if(getRoomByRoomNumber(room_number, new_room)){
-        cout << "Room number already exists." << endl;
+        showWarning("Room number already exists." );
         return Room();
     }
 
     // display all the available room types
-    cout << "Available Room types " << endl;
+    showHighlight(" --- Available Room Types --  ");
     cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
     for(RoomType &rt : roomtypes){
         cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
@@ -65,7 +65,7 @@ Room addRoom() {
 
     // check if the room type id is valid (exists)
     if (!validateRoomTypeId(room_type_id)) {
-        cout << "Invalid room type id. Please try again." << endl;
+        showWarning("Invalid room type id. Please try again.");
         continue;
     }
 
@@ -76,11 +76,11 @@ Room addRoom() {
       "', " + to_string(room_type_id) + ");";
 
   if (insertObject(insertQuery, "Rooms", RoomCallback, &rooms)) {
-    cout << "Room added successfully.\n";
+    showSuccess("Room added successfully.");
     return rooms.back();
   }
   else {
-    cout << "Failed to add Room.\n";
+    showError("Failed to add Room.");
     return Room();
   }
 }
@@ -105,7 +105,7 @@ void removeRoom() {
     }
   }
   if(!found){
-    cout << "Room Not Found" << endl;
+    showWarning("Room Not Found");
     return;
   }
 
@@ -114,17 +114,17 @@ void removeRoom() {
       if (!deleteObject(deleteQuery)) {
         throw runtime_error("Failed to remove the room!");
     } 
-    cout << "Room removed successfully.\n";
+    showSuccess("Room removed successfully.");
   }
   catch (const exception &e) {
-      cout << "Error: " << e.what() << endl;
+      showError("Error: " + string(e.what()));
       exitProgram();
   }
 }
 
 void bookRoom() {
     if(current_user.room_id != -1){
-        cout << "You already booked a room." << endl;
+        showWarning("You already booked a room.");
         return;
     }
 
@@ -139,12 +139,12 @@ void bookRoom() {
 
     Room room;
     if (!getRoomByRoomNumber(room_number, room)) {
-        cout << "Room not found." << endl;
+        showWarning("Room not found.");
         return;
     }
 
     if (!room.is_available) {
-        cout << "Room is not available." << endl;
+        showWarning("Room is not available.");
         return;
     }
 
@@ -157,10 +157,10 @@ void bookRoom() {
         }
         
         current_user.room_id = room.room_id; // set the current user's room id
-        cout << "Room booked successfully.\n";
+        showSuccess("Room booked successfully.");
     }
     catch (const exception &e) {
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
 }
@@ -168,14 +168,14 @@ void bookRoom() {
 // show available rooms
 void showAvailableRooms() {
     
-    cout << "\n\n--- Available Rooms ---\n\n";
+    showHighlight("--- Available Rooms ---");
     cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
     << "Room Type" << endl;
     
   for (const Room &room : rooms) {
       if (!room.is_available) {
           continue;
-        }
+      }
     
     RoomType roomtype;
     getRoomTypeById(room.room_type_id, roomtype);
@@ -184,7 +184,7 @@ void showAvailableRooms() {
 }
 
 void showRoomsByTypes(){
-  cout << "Room Types: " << endl;
+  showHighlight("Room Types");
   cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
   for(RoomType &rt : roomtypes){
       cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
@@ -200,11 +200,11 @@ void showRoomsByTypes(){
 
   RoomType roomtype;
   if(getRoomTypeById(room_type_id, roomtype)){
-      cout << "Room Type not found." << endl;
+      showWarning("Room Type not found.");
       return;
   }
 
-  cout << "\n\n --- Rooms of " << roomtype.type_name << " --- \n\n" << endl;
+  showHighlight(" --- Rooms of " + roomtype.type_name + " --- ");
   cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << endl;
   
   for(Room &r : rooms){
@@ -219,25 +219,25 @@ void showRoomsByTypes(){
 void showRoomDetails(int room_number) {
   Room room;
   if (!getRoomByRoomNumber(room_number, room)) {
-    cout << "Room not found." << endl;
+    showWarning("Room not found.");
     return;
   }
 
   RoomType roomtype;
   getRoomTypeById(room.room_type_id, roomtype);
 
-  cout << "\n\n--- Room Details ---\n\n";
-  cout << "\tRoom ID: " << room.room_id << endl;
-  cout << "\tRoom Number: " << room.room_number << endl;
-  cout << "\tRoom Type: " << roomtype.type_name << endl;
-  cout << "\tAvailability: "
+  showHighlight("--- Room Details ---");
+  cout << "Room ID: " << room.room_id << endl;
+  cout << "Room Number: " << room.room_number << endl;
+  cout << "Room Type: " << roomtype.type_name << endl;
+  cout << "Availability: "
        << (room.is_available ? "Available" : "Not Available") << endl;
 }
 
 
 void leaveRoom() {
     if(current_user.room_id == -1){
-        cout << "You didn't book any room yet." << endl;
+        showWarning("You didn't book any room yet.");
         return;
     }
 
@@ -246,16 +246,16 @@ void leaveRoom() {
         string updateQuery = "UPDATE Rooms SET is_available = 1 WHERE room_id = " + to_string(room_id) + ";";
         
         if (!updateObject(updateQuery)) {
-        cout << "Failed to update room availability.\n";
+        showError("Failed to update room availability.");
         throw runtime_error("Failed to update room availability in database");
         }
     }
     catch (const exception &e) {
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
     current_user.room_id = -1; // reset the room id of the current user
-    cout << "You left the room successfully.\n";
+    showSuccess("You left the room successfully.");
 }
 
 
@@ -271,11 +271,11 @@ void showRooms() {
         }
     }
       catch (const exception &e) {
-          cout << "Error: " << e.what() << endl;
+          showError("Error: " + string(e.what()));
           exitProgram();
       }
   
-    cout << "\n--- All Rooms ---\n";
+    showHighlight("--- All Rooms ---");
     cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
          << "Room Type" << setw(15) << "Availability" << endl;
     for (const Room &room : rooms) {
@@ -297,7 +297,7 @@ void getRooms() {
       throw runtime_error("Error when retrieving all the rooms");
     }
   } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }

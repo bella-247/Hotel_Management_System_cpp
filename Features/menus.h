@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include "../Structures/structures.h"
+#include "Messages/messages.h"
+
 #include "../Auth/authentication.h"
 #include "../Components/Customer/customer.h"
 #include "../Components/Staff/staff.h"

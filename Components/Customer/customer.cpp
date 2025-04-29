@@ -27,13 +27,12 @@ bool getCustomerData(Customer &customer) {
     // if any of the fields are empty i want them to insert again
     if (isEmpty(customer.name) || isEmpty(customer.email) ||
         isEmpty(customer.password) || isEmpty(customer.phone_number)) {
-      cout << "Empty fields detected. Please fill all fields correctly.\n"
-           << endl;
+      showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
     // if the customer already exists i want to return to the menu
     if (isCustomerAlreadyRegistered(customer)) {
-      cout << "Customer already registered. Please try again.\n" << endl;
+      showWarning("Customer already registered. Please try again.");
       return false;
     }
     return true;
@@ -53,6 +52,7 @@ bool getCustomerById(int &customer_id, Customer &customer) {
 bool getCustomerByEmail(string email, Customer &customer){
   for (Customer &c : customers) {
     if (c.email == email) {
+      customer = c;
       return true;
     }
   }
@@ -79,11 +79,11 @@ Customer addCustomer() {
       throw runtime_error("Failed to create customer in database");
     }
 
-    cout << "Customer " << customer.name << " created successfully!" << endl;
+    showSuccess("Customer " + customer.name + " created successfully!" );
     return customers.back();
   } 
   catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
     return Customer(); // Return an empty Customer object in case of error
   }
@@ -104,7 +104,7 @@ void removeCustomer() {
     }
   }
   if (!found) {
-    cout << "Customer not found." << endl;
+    showWarning("Customer not found.");
     return;
   }
   
@@ -115,10 +115,10 @@ void removeCustomer() {
       throw runtime_error("Failed to delete customer from database");
     }
 
-    cout << "Customer deleted successfully!" << endl;
+    showSuccess("Customer deleted successfully!");
   }
   catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }
@@ -127,16 +127,16 @@ void removeCustomer() {
 void showCustomerProfile(int &customer_id) {
   Customer customer;
   if (!getCustomerById(customer_id, customer)) {
-    cout << "Customer not found." << endl;
+   showWarning("Customer not found." );
     return;
   }
 
-  cout << "\n\n--- Customer Profile ---\n\n";
+  showHighlight("--- Customer Profile ---");
 
-  cout << "\tCustomer ID: " << customer.customer_id << endl;
-  cout << "\tName: " << customer.name << endl;
-  cout << "\tEmail: " << customer.email << endl;
-  cout << "\tPhone Number: " << customer.phone_number << endl;
+  cout << "Customer ID: " << customer.customer_id << endl;
+  cout << "Name: " << customer.name << endl;
+  cout << "Email: " << customer.email << endl;
+  cout << "Phone Number: " << customer.phone_number << endl;
 }
 
 bool findCustomer() {
@@ -147,8 +147,8 @@ bool findCustomer() {
   getline(cin, email);
 
   if(!getCustomerByEmail(email, customer)){
+    showWarning("Customer not found.");
     return false;
-    cout << "Customer not found." << endl;
   }
 
   showCustomerProfile(customer.customer_id);
@@ -158,20 +158,20 @@ bool findCustomer() {
 // Print the list of customers in tabular format in reverse order
 void showCustomers() {
   if (customers.empty()) {
-    cout << "No customers registered.\n";
+   showWarning("No customers registered.");
     return;
   }
 
-  cout << "\n\n --- Customer List --- \n\n";
-  cout << left << setw(10) << "Customer ID" << setw(20) << "Name" << setw(20)
+  showHighlight("--- Customer List ---");
+  cout << left << setw(10) << "Customer ID" << setw(20) << "Name" << setw(30)
        << "Email" << setw(20) << "Phone" << endl;
 
   cout << string(77, '-') << endl;
 
   for (int i = customers.size() - 1; i > -1; --i) {
     const Customer &customer = customers.at(i);
-    cout << left << setw(12) << customer.customer_id << setw(20)
-         << customer.name << setw(30) << customer.email << setw(15)
+    cout << left << setw(10) << customer.customer_id << setw(20)
+         << customer.name << setw(30) << customer.email << setw(20)
          << customer.phone_number << endl;
   }
 }
@@ -188,7 +188,7 @@ void getCustomers() {
       throw runtime_error("Error when retrieving all the customers");
     }
   } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }

@@ -34,10 +34,8 @@ CREATE TABLE Rooms (
     room_id INTEGER PRIMARY KEY,
     room_number INTEGER NOT NULL UNIQUE,
     room_type_id INTEGER NOT NULL,
-    customer_id INTEGER UNIQUE,
     is_available INTEGER DEFAULT 1, -- Use 0/1 for boolean
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE SET NULL,
     FOREIGN KEY (room_type_id) REFERENCES RoomTypes(room_type_id) ON DELETE RESTRICT
 );
 

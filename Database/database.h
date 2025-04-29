@@ -4,7 +4,7 @@
 #include "sqlite3.h"
 #include <iostream>
 #include <string>
-
+#include "../Features/Messages/messages.h"
 using namespace std;
 
 bool connectToDatabase();

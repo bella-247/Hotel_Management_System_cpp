@@ -1,4 +1,5 @@
 #include "structures.h"
+#include "../Features/Messages/messages.h"
 #include <iostream>
 
 using namespace std;
@@ -27,6 +28,13 @@ void cleanInput(){
 }
 
 void showChoiceError() {
-    cout << "\033[1;31m" << "Invalid input, please try again." << "\033[0m\n\n";
+    showError("Invalid input, please try again.");
     cleanInput();
-  }
+}
+
+string to_lower(string str) {
+    for (char &c : str) {
+        c = tolower(c);
+    }
+    return str;
+}

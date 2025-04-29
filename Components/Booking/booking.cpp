@@ -35,12 +35,12 @@ void findBooking() {
     }
 
     if(!getRoomByRoomNumber(room_number, room)) {
-        cout << "Room not found." << endl;
+        showWarning("Room not found.");
         return;
     }
     
     if(!getCustomerByEmail(email, customer)) {
-        cout << "Customer not found." << endl;
+        showWarning("Customer not found.");
         return;
     }
 
@@ -54,7 +54,7 @@ void findBooking() {
     }
     
     if(!found) {
-        cout << "Booking not found " << endl;
+        showWarning("Booking not found");
     }
 }
 
@@ -89,22 +89,22 @@ Booking addBooking(){
     }
 
     if(!validateDate(check_in) || !validateDate(check_out)){
-        cout << "Invalid Date" << endl;
+        showError("Invalid Date");
         return Booking();
     }
 
     if(!getCustomerByEmail(customer_email, customer)){
-        cout << "Customer not found." << endl;
+        showWarning("Customer not found.");
         return Booking();
     }
 
     if(!getStaffByEmail(staff_email, staff)){
-        cout << "Staff not found." << endl;
+        showWarning("Staff not found.");
         return Booking();
     }
 
     if(!getRoomByRoomNumber(room_number, room)){
-        cout << "Room not found." << endl;
+        showWarning("Room not found.");
         return Booking();
     }
 
@@ -120,10 +120,10 @@ Booking addBooking(){
         if(!insertObject(insertQuery, "Bookings", BookingCallback, &bookings)){
             throw runtime_error("Failed to add booking");
         }
-        cout << "Booking succcessfully added" << endl;
+        showSuccess("Booking succcessfully added");
     }
     catch(const exception& e){
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
     return Booking();
@@ -134,7 +134,7 @@ void showBookingDetails(int &booking_id) {
     Booking booking;
 
     if(!getBookingById(booking_id, booking)) {
-        cout << "Booking not found." << endl;
+        showWarning("Booking not found.");
         return;
     }
 
@@ -148,7 +148,7 @@ void showBookingDetails(int &booking_id) {
     getRoomById(booking.room_id, room);
     getRoomTypeById(room.room_type_id, roomtype);
 
-    cout << "\n\n --- Booking Details --- \n\n";
+    showHighlight("--- Booking Details ---");
     cout << "Booking Id: " << booking.booking_id << endl; 
     cout << "Customer(Id): " << customer.name << " ("<< customer.customer_id << ")" << endl; 
     cout << "Room Number: " << room.room_number << endl;
@@ -156,7 +156,7 @@ void showBookingDetails(int &booking_id) {
     cout << "Staff(Id): " << staff.name << " ("<< staff.staff_id << ")" << endl << endl; 
 
     cout << "Check In: " << booking.check_in << endl;
-    cout << "Check Out " << booking.check_out << endl;
+    cout << "Check Out: " << booking.check_out << endl;
 }
 
 
@@ -169,7 +169,7 @@ void showCustomerBookings(){
         return;
     }
 
-    cout << "--- Customer Bookings ---" << customer_id << endl;
+    showHighlight("--- Customer Bookings ---" + to_string(customer_id));
     cout << left << setw(10) << "Booking Id" << setw(10) << "Room Number" << setw(10) << "Room Type" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
     string(100, '-');
 
@@ -186,7 +186,7 @@ void showCustomerBookings(){
         }
     }
     if(!found){
-        cout << "Customer has no previous bookings." << endl;
+        showWarning("Customer has no previous bookings.");
     }
 }
 
@@ -202,12 +202,12 @@ void showRoomBookings(){
 
     Room room;
     if(!getRoomByRoomNumber(room_number, room)){
-        cout << "Room not found." << endl;
+        showWarning("Room not found.");
         return;
     }
 
     bool found = false;
-    cout << "--- Room Bookings ---" << room_number << endl;
+    showHighlight("--- Room Bookings ---" + to_string(room_number));
     cout << left << setw(10) << "Booking Id" << setw(10) << "Customer" << setw(10) << "Room Type" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
 
     for(Booking &b : bookings){
@@ -223,17 +223,17 @@ void showRoomBookings(){
     }
 
     if(!found){
-        cout << "Room has no previous bookings" << endl;
+        showWarning("Room has no previous bookings");
     }
 }
 
 void showBookings(){
     if(bookings.empty()){
-        cout << "No Bookings yet" << endl;
+        showWarning("No Bookings yet");
         return;
     }
 
-    cout << "\n\n --- Bookings List --- \n\n";
+    showHighlight("--- Bookings List --- ");
     cout << left << setw(10) << "Booking Id" << setw(10) << "Customer" 
         << setw(10) << "Room Number" << setw(10) << "Room Type" << setw(10) 
         << "Staff" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
@@ -265,7 +265,7 @@ void getBookings(){
         }
     }
     catch(const exception &e){
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
 }

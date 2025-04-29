@@ -1,12 +1,7 @@
 #include "roomtypes.h"
 // Functions to find the required room types
 
-string to_lower(string str) {
-    for (char &c : str) {
-        c = tolower(c);
-    }
-    return str;
-}
+
 
 // check if room type id exists
 bool validateRoomTypeId(int room_type_id) {
@@ -66,7 +61,7 @@ RoomType addRoomType() {
 
 
     if(getRoomTypeByTypeName(new_roomtype.type_name, new_roomtype)){
-        cout << "Room Type already exists." << endl;
+        showWarning("Room Type already exists.");
         return RoomType();
     }
 
@@ -78,10 +73,10 @@ RoomType addRoomType() {
         }
     }
     catch (const exception &e) {
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
-    cout << "Room Type < " << new_roomtype.type_name << " > created successfully!" << endl;
+    showSuccess("Room Type < " + new_roomtype.type_name + " > created successfully!" );
     return RoomType();
 }
 
@@ -97,21 +92,7 @@ void removeRoomType() {
     }
 
     if(!getRoomTypeById(room_type_id, roomtype)){
-        cout << "Room Type not found." << endl;
-        return;
-    }
-    
-    bool found = false;
-    for(int i = 0; i < roomtypes.size(); i++){
-        if(roomtypes[i].room_type_id == room_type_id){
-            roomtypes.erase(roomtypes.begin() + i);
-            found = true;
-            break;
-        }
-    }
-
-    if(!found){
-        cout << "Room Type not found." << endl;
+        showWarning("Room Type not found.");
         return;
     }
 
@@ -122,9 +103,9 @@ void removeRoomType() {
             throw runtime_error("Failed to remove Room Type.");
         }
         
-        cout << "Room Type with ID " << room_type_id << " removed successfully!" << endl;
+        showSuccess("Room Type with ID " + to_string(room_type_id) + " removed successfully!");
     } catch (const exception &e) {
-        cout << "Error: " << e.what() << endl;
+        showError("Error: " + string(e.what()));
         exitProgram();
     }
 }
@@ -141,7 +122,7 @@ void showRoomTypeDetails(){
 
     RoomType roomtype;
     if(!getRoomTypeById(room_type_id, roomtype)){
-        cout << "Room Type not found " << endl;
+        showWarning("Room Type not found ");
         return;
     }
 
@@ -152,7 +133,7 @@ void showRoomTypeDetails(){
         }
     }
 
-    cout << "\n\n -- Room Type Details -- \n\n";
+    showHighlight("-- Room Type Details --");
 
     cout << "Room Type Id: " << roomtype.room_type_id << endl;
     cout << "Room Type Name: " << roomtype.type_name << endl;
@@ -162,11 +143,11 @@ void showRoomTypeDetails(){
 
 void showRoomTypes() {
     if (roomtypes.empty()) {
-        cout << "No room types available.\n";
+        showWarning("No room types available.");
         return;
     }
 
-    cout << "\n--- Room Types ---\n";
+    showHighlight("--- Room Types ---");
     cout << left << setw(10) << "ID" << setw(20) << "Type Name" << setw(10) << "Price" << endl;
     for (const RoomType &roomtype : roomtypes) {
         cout << left << setw(10) << roomtype.room_type_id << setw(20) << roomtype.type_name
@@ -184,7 +165,7 @@ void getRoomTypes() {
         throw runtime_error("Error when retrieving all the room types");
       }
     } catch (const exception &e) {
-      cout << "Error: " << e.what() << endl;
+      showError("Error: " + string(e.what()));
       exitProgram();
     }
 }

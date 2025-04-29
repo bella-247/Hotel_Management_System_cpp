@@ -8,6 +8,7 @@
             "args": [
                 "main.cpp",
                 "Structures/structures.cpp",
+                "Features/Messages/messages.cpp",
                 "Features/menus.cpp",
                 "Auth/authentication.cpp",
                 "Database/database.cpp",
@@ -18,7 +19,7 @@
                 "Components/Room/roomtypes.cpp",
                 "Components/Booking/booking.cpp",
                 "-o",
-                "main",
+                "main.exe",
                 "-I.",
                 "-IDatabase/sqlite3",
                 "-LDatabase",

@@ -35,17 +35,17 @@ Payment addPayment() {
   }
 
   if(payment.amount < 0){
-    cout << "Invalid amount " << endl;
+    showError("Invalid amount ");
     return Payment();
   }
 
   if(getPaymentByBookingId(payment.booking_id, payment)){
-    cout << "Payment already exists for this Booking. " << endl;
+    showWarning("Payment already exists for this Booking. ");
     return Payment();
   }
 
   if(!getBookingById(payment.booking_id, booking)){
-    cout << "Booking not found." << endl;
+    showWarning("Booking not found.");
     return Payment();
   }
 
@@ -59,12 +59,11 @@ Payment addPayment() {
       throw runtime_error("Failed to create payment in database");
     }
 
-    cout << "Payment of $" << payment.amount << " received for Booking ID "
-         << payment.booking_id << endl;
+    showSuccess("Payment of $" + to_string(payment.amount) + " received for Booking ID " + to_string(payment.booking_id));
     return payments.back();
   } 
   catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
     return Payment(); // Return an empty Payment object in case of error
   }
@@ -81,7 +80,7 @@ void showPaymentByBookingId(){
 
   Payment payment;
   if(!getPaymentByBookingId(booking_id, payment)){
-      cout << "Payment not found for this booking." << endl;
+      showWarning("Payment not found for this booking.");
       return;
   }
   
@@ -93,11 +92,11 @@ void showPaymentByBookingId(){
 
 void showPaymentHistory() {
   if (payments.empty()) {
-    cout << "No payments recorded.\n";
+    showWarning("No payments recorded.");
     return;
   }
 
-  cout << "\n--- Payment History ---\n";
+  showHighlight("--- Payment History ---");
   cout << left << setw(10) << "Payment ID" << setw(10) << "Booking ID" << setw(10)
        << "Amount" << setw(15) << "Payment Date" << endl;
   for (int i = payments.size() - 1; i > -1; --i) {
@@ -126,45 +125,43 @@ void generateInvoice() {
   Staff staff;
 
   if (!getPaymentById(payment_id, payment)) {
-    cout << "Payment not found" << endl;
+    showWarning("Payment not found");
     return;
   }
   if (!getBookingById(payment.booking_id, booking)) {
-    cout << "Booking not found" << endl;
+    showWarning("Booking not found");
     return;
   }
   if(!getRoomById(booking.room_id, room)){
-    cout << "Room not found " << endl;
+    showWarning("Room not found ");
     return;
   }
   if(!getRoomTypeById(room.room_type_id, roomtype)){
-     cout << "Room Type not found " << endl;
+     showWarning("Room Type not found ");
      return;
   }
 
   if(!getCustomerById(booking.customer_id, customer)){
-    cout << "Customer not found" << endl;
+    showWarning("Customer not found");
   }
 
   if (!getStaffById(booking.staff_id, staff)) {
-    cout << "Staff not found" << endl;
+    showWarning("Staff not found");
     return;
   }
 
-  cout << "----- Invoice -----" << endl;
+  showHighlight("----- Invoice -----");
   cout << "(Service Provider) Staff ID: " << booking.staff_id << endl;
   cout << "Staff Name: " << staff.name << endl;
   cout << "Staff Email: " << staff.email << endl << endl << endl;
 
   cout << "Payment ID: " << payment.payment_id << endl;
-  cout << "Booking ID: " << payment.booking_id << endl;
+  cout << "Booking ID: " << payment.booking_id << endl << endl;
 
-  cout << "----- Customer Details -----" << endl;
   cout << "Customer ID: " << booking.customer_id << endl;
   cout << "Customer Name: " << customer.name << endl;
   cout << "Customer Email: " << customer.email << endl << endl << endl;
 
-  cout << "----- Room Details -----" << endl; 
   cout << "Room Number: " << room.room_number << endl;
   cout << "Room Type: " << roomtype.type_name << endl << endl << endl;
 
@@ -185,7 +182,7 @@ void getPayments() {
       throw runtime_error("Error when retrieving all the payments");
     }
   } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }

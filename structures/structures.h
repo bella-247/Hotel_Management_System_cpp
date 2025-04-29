@@ -11,7 +11,7 @@ using namespace std;
 // User structure to store user data
 struct User {
     int customer_id = -1, staff_id = -1;
-    bool isCustomer, isStaff;
+    bool isCustomer = false, isStaff = false, isAdmin = false;
     int room_id = -1;
 };
 
@@ -59,7 +59,7 @@ struct Payment {
 bool isEmpty(const string &str);
 void cleanInput();
 void showChoiceError();
-
+string to_lower(string str);
 
 // User state manager 
 extern User current_user;

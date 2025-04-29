@@ -27,12 +27,11 @@ bool getStaffData(Staff &staff) {
     if (isEmpty(staff.name) || isEmpty(staff.email) ||
         isEmpty(staff.password) || isEmpty(staff.phone_number) ||
         isEmpty(staff.role)) {
-      cout << "Empty fields detected. Please fill all fields correctly.\n"
-           << endl;
+      showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
     if (isStaffAlreadyRegistered(staff)) {
-      cout << "Staff already registered. Please try again.\n" << endl;
+      showWarning("Staff already registered. Please try again.");
       return false;
     }
     return true;
@@ -54,6 +53,7 @@ bool getStaffById(int &staff_id, Staff &staff) {
 bool getStaffByEmail(string email, Staff &staff){
   for (Staff &s : staffs) {
     if (s.email == email) {
+      staff = s;
       return true;
     }
   }
@@ -80,11 +80,11 @@ Staff addStaff() {
       throw runtime_error("Failed to create staff in database");
     }
 
-    cout << "Staff < " << staff.name << " > created successfully!" << endl;
+    showSuccess("Staff < " + staff.name + " > created successfully!");
     return staffs.back();
   } 
   catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
     return Staff(); // Return an empty Staff object in case of error
   }
@@ -105,7 +105,7 @@ void removeStaff() {
     }
   }
   if (!found) {
-    cout << "Staff not found." << endl;
+    showError("Staff not found.");
     return;
   }
 
@@ -116,11 +116,11 @@ void removeStaff() {
       throw runtime_error("Failed to delete staff from database");
     }
 
-    cout << "Staff deleted successfully!" << endl;
+    showSuccess("Staff deleted successfully!");
   }
 
   catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }
@@ -129,11 +129,11 @@ void removeStaff() {
 void showStaffProfile(int &staff_id) {
   Staff staff;
   if (!getStaffById(staff_id, staff)) {
-    cout << "Staff not found." << endl;
+    showWarning("Staff not found.");
     return;
   }
 
-  cout << "\n\n--- Staff Profile ---\n\n";
+  showHighlight("--- Staff Profile ---");
 
   cout << "\tStaff ID: " << staff.staff_id << endl;
   cout << "\tName: " << staff.name << endl;
@@ -150,8 +150,8 @@ bool findStaff() {
   getline(cin, email);
 
   if(!getStaffByEmail(email, staff)){
+    showWarning("Staff not found.");
     return false;
-    cout << "Staff not found." << endl;
   }
 
   showStaffProfile(staff.staff_id);
@@ -160,12 +160,12 @@ bool findStaff() {
 
 void showStaffs() {
   if (staffs.empty()) {
-    cout << "No staffs registered.\n";
+    showWarning("No staffs registered.");
     return;
   }
 
-  cout << "\n--- Staff List ---\n";
-  cout << left << setw(12) << "Staff ID" << setw(20) << "Name" << setw(30)
+  showHighlight("--- Staff List ---");
+  cout << left << setw(10) << "Staff ID" << setw(20) << "Name" << setw(30)
        << "Email" << setw(15) << "Phone" << setw(10) << "Role" << endl;
 
   cout << string(77, '-') << endl;
@@ -174,7 +174,7 @@ void showStaffs() {
     const Staff &staff = staffs.at(i);
 
     cout << left << setw(10) << staff.staff_id << setw(20) << staff.name
-         << setw(20) << staff.email << setw(20) << staff.phone_number
+         << setw(30) << staff.email << setw(20) << staff.phone_number
          << setw(10) << staff.role << endl;
   }
 }
@@ -194,7 +194,7 @@ void getStaffs() {
     }
 
   } catch (const exception &e) {
-    cout << "Error: " << e.what() << endl;
+    showError("Error: " + string(e.what()));
     exitProgram();
   }
 }

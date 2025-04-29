@@ -8,6 +8,7 @@
 #include <cstring>
 #include <stdexcept>
 #include "../../Structures/structures.h"
+#include "../../Features/Messages/messages.h"
 #include "../../Database/database.h"
 
 // Components 

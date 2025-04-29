@@ -4,6 +4,7 @@
 #include "../Components/Customer/customer.h"
 #include "../Components/Staff/staff.h"
 #include "../Structures/structures.h"
+#include "../Features/Messages/messages.h"
 #include <iostream>
 #include <vector>
 #include <string>

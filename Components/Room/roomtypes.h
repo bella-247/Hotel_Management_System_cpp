@@ -9,6 +9,7 @@
 #include <cctype>
 
 #include "../../Structures/structures.h"
+#include "../../Features/Messages/messages.h"
 #include "../../Database/database.h"
 
 // helper functions
