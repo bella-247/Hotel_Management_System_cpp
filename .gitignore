@@ -3,4 +3,8 @@
 *.layout
 *.depend
 *.cbp
-*.mp4
+*.py
+*.bkp
+*.py
+*.pptx
+*.html
