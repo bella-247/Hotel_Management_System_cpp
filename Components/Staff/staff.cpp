@@ -165,17 +165,17 @@ void showStaffs() {
   }
 
   showHighlight("--- Staff List ---");
-  cout << left << setw(10) << "Staff ID" << setw(20) << "Name" << setw(30)
-       << "Email" << setw(15) << "Phone" << setw(10) << "Role" << endl;
+  cout << left << setw(15) << "Staff ID" << setw(20) << "Name" << setw(30)
+       << "Email" << setw(15) << "Phone" << setw(15) << "Role" << endl;
 
   cout << string(77, '-') << endl;
 
   for (int i = staffs.size() - 1; i > -1; --i) {
     const Staff &staff = staffs.at(i);
 
-    cout << left << setw(10) << staff.staff_id << setw(20) << staff.name
+    cout << left << setw(15) << staff.staff_id << setw(20) << staff.name
          << setw(30) << staff.email << setw(20) << staff.phone_number
-         << setw(10) << staff.role << endl;
+         << setw(15) << staff.role << endl;
   }
 }
 

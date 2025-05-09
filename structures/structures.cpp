@@ -27,7 +27,7 @@ void cleanInput(){
     cin.ignore(INT_MAX, '\n');
 }
 
-void showChoiceError() {
+void showInputError() {
     showError("Invalid input, please try again.");
     cleanInput();
 }

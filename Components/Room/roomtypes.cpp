@@ -45,14 +45,14 @@ RoomType addRoomType() {
         getline(cin, new_roomtype.type_name);
 
         if(isEmpty(new_roomtype.type_name)){
-            showChoiceError();
+            showInputError();
             continue;
         }
 
         cout << "Enter Room Type Price: ";
         cin >> new_roomtype.price;
         if (cin.fail()) {
-            showChoiceError();
+            showInputError();
             continue;
         }
         break;
@@ -87,7 +87,7 @@ void removeRoomType() {
     cout << "Enter Room Type ID to remove: ";
     cin >> room_type_id;
     if (cin.fail()) {
-        showChoiceError();
+        showInputError();
         return;
     }
 
@@ -116,7 +116,7 @@ void showRoomTypeDetails(){
     cout << "Enter the room type id: ";
     cin >> room_type_id;
     if(cin.fail()){
-        showChoiceError();
+        showInputError();
         return;
     }
 
@@ -148,10 +148,10 @@ void showRoomTypes() {
     }
 
     showHighlight("--- Room Types ---");
-    cout << left << setw(10) << "ID" << setw(20) << "Type Name" << setw(10) << "Price" << endl;
+    cout << left << setw(15) << "ID" << setw(20) << "Type Name" << setw(15) << "Price" << endl;
     for (const RoomType &roomtype : roomtypes) {
-        cout << left << setw(10) << roomtype.room_type_id << setw(20) << roomtype.type_name
-             << setw(10) << roomtype.price << endl;
+        cout << left << setw(15) << roomtype.room_type_id << setw(20) << roomtype.type_name
+             << setw(15) << roomtype.price << endl;
     }
 }
 

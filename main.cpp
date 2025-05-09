@@ -20,9 +20,10 @@ void startProgram() {
       showRegistrationMenu();
     } else {
       if (current_user.isCustomer) {
-        showCustomerMenu(startProgram);
-      } else {
-        showStaffMenu(startProgram);
+        showCustomerMenu(startProgram, retrieveDatabaseData);
+      } 
+      else {
+        showStaffMenu(startProgram, retrieveDatabaseData);
       }
     }
   }

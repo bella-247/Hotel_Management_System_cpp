@@ -1,6 +1,6 @@
 #include "booking.h"
 
-bool validateDate(Date date){   
+bool validDate(Date date){   
     bool lower_limits = date.year > 2000 && date.month > 0 && date.date > 0; 
     bool upper_limits = date.year < 3000 && date.month <= 12 && date.date <= 31;
     return lower_limits && upper_limits;
@@ -30,7 +30,7 @@ void findBooking() {
     cin >> room_number;
 
     if(cin.fail()) {
-        showChoiceError();
+        showInputError();
         return;
     }
 
@@ -46,7 +46,7 @@ void findBooking() {
 
     bool found = false;
     for(Booking &b : bookings) {
-        if(b.customer_id == customer.customer_id && room.room_number == room_number) {
+        if(b.customer_id == customer.customer_id && b.room_id == room.room_id) {
             showBookingDetails(b.booking_id);
             found = true;
             break;
@@ -58,22 +58,38 @@ void findBooking() {
     }
 }
 
-Booking addBooking(){
+
+Booking addBooking(int room_number){
     Customer customer;
-    Staff staff;
     Room room;
 
-    string customer_email, staff_email; 
-    int room_number;
+    string customer_email; 
     Date check_in, check_out;
 
-    cleanInput();
-    cout << "Enter customer email: ";
-    getline(cin, customer_email);
-    cout << "Enter staff email: ";
-    getline(cin, staff_email);
-    cout << "Enter the room number: ";
-    cin >> room_number;
+    if(current_user.isStaff){
+        cleanInput();
+        cout << "Enter customer email: ";
+        getline(cin, customer_email);
+
+        if(!getCustomerByEmail(customer_email, customer)){
+            showWarning("Customer not found.");
+            return Booking();
+        }
+    }
+
+    if(room_number == -1){
+        cout << "Enter the room number: ";
+        cin >> room_number;
+    }
+
+    if(!getRoomByRoomNumber(room_number, room)){
+        showWarning("Room not found.");
+        return Booking();
+    }
+    if(room.is_available){
+        showWarning("Room is still not booked");
+        return Booking();
+    }
 
     cout << "Enter check_in year (yyyy) : "; cin >> check_in.year;
     cout << "Enter check_in month (mm) : "; cin >> check_in.month;
@@ -84,43 +100,38 @@ Booking addBooking(){
     cout << "Enter check_out date (dd): "; cin >> check_out.date;
     
     if(cin.fail()){
-        showChoiceError();
+        showInputError();
         return Booking();
     }
 
-    if(!validateDate(check_in) || !validateDate(check_out)){
+    if(!validDate(check_in) || !validDate(check_out)){
         showError("Invalid Date");
         return Booking();
     }
 
-    if(!getCustomerByEmail(customer_email, customer)){
-        showWarning("Customer not found.");
-        return Booking();
-    }
-
-    if(!getStaffByEmail(staff_email, staff)){
-        showWarning("Staff not found.");
-        return Booking();
-    }
-
-    if(!getRoomByRoomNumber(room_number, room)){
-        showWarning("Room not found.");
-        return Booking();
-    }
-
-
     try{
-        string check_in_date = to_string(check_in.year) + "-" + to_string(check_in.month) + "-" + to_string(check_in.year);
+
+        string check_in_date = to_string(check_in.year) + "-" + to_string(check_in.month) + "-" + to_string(check_in.date);
         string check_out_date = to_string(check_out.year) + "-" + to_string(check_out.month) + "-" + to_string(check_out.date);
 
-        string insertQuery = 
-        "INSERT INTO Bookings (room_id, customer_id, staff_id, check_in, check_out) VALUES (" + 
-        to_string(room.room_id) + "," + to_string(customer.customer_id) + "," + to_string(staff.staff_id) + "," + check_in_date + ");";
+        string insertQuery;
+        if(current_user.isStaff){
+            insertQuery = 
+            "INSERT INTO Bookings (room_id, customer_id, staff_id, check_in, check_out) VALUES (" + 
+            to_string(room.room_id) + "," + to_string(customer.customer_id) + "," + to_string(current_user.staff_id) + ",'" + check_in_date + "' , '" + check_out_date + "');";
+        }
+        else{ // if the customer is registering by themselves
+            insertQuery = 
+            "INSERT INTO Bookings (room_id, customer_id, check_in, check_out) VALUES (" + 
+            to_string(room.room_id) + "," + to_string(current_user.customer_id) + ",'" + check_in_date + "' , '" + check_out_date + "');";
+        }
 
         if(!insertObject(insertQuery, "Bookings", BookingCallback, &bookings)){
             throw runtime_error("Failed to add booking");
         }
-        showSuccess("Booking succcessfully added");
+        if(current_user.isStaff){
+            showSuccess("Booking succcessfully added");
+        }
     }
     catch(const exception& e){
         showError("Error: " + string(e.what()));
@@ -128,7 +139,6 @@ Booking addBooking(){
     }
     return Booking();
 }
-
 
 void showBookingDetails(int &booking_id) {
     Booking booking;
@@ -149,11 +159,16 @@ void showBookingDetails(int &booking_id) {
     getRoomTypeById(room.room_type_id, roomtype);
 
     showHighlight("--- Booking Details ---");
-    cout << "Booking Id: " << booking.booking_id << endl; 
+    cout << "Booking Id: " << booking.booking_id << endl;
     cout << "Customer(Id): " << customer.name << " ("<< customer.customer_id << ")" << endl; 
     cout << "Room Number: " << room.room_number << endl;
     cout << "Room Type: " << roomtype.type_name << endl;
-    cout << "Staff(Id): " << staff.name << " ("<< staff.staff_id << ")" << endl << endl; 
+    if(staff.staff_id != -1){
+        cout << "Staff(Id): " << staff.name << " ("<< staff.staff_id << ")" << endl << endl; 
+    }
+    else{
+        cout << "Staff(Id): - " << endl << endl;
+    }
 
     cout << "Check In: " << booking.check_in << endl;
     cout << "Check Out: " << booking.check_out << endl;
@@ -161,27 +176,34 @@ void showBookingDetails(int &booking_id) {
 
 
 void showCustomerBookings(){
-    int customer_id;
-    cout << "Enter the customer id: ";
-    cin >> customer_id;
+    Customer customer;
+    string email;
+    cout << "Enter the customer email: ";
+    cleanInput();
+    getline(cin, email);
     if(cin.fail()){
-        showChoiceError();
+        showInputError();
         return;
     }
 
-    showHighlight("--- Customer Bookings ---" + to_string(customer_id));
-    cout << left << setw(10) << "Booking Id" << setw(10) << "Room Number" << setw(10) << "Room Type" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
+    if(!getCustomerByEmail(email, customer)){
+        cout << "Customer not found " << endl;
+        return;
+    }
+
+    showHighlight("--- Customer Bookings --- ( Customer " +  to_string(customer.customer_id) + " ) ");
+    cout << left << setw(15) << "Booking Id" << setw(15) << "Room No" << setw(15) << "Room Type" << setw(15) << "Check In" << setw(15) << "Check Out" << endl;
     string(100, '-');
 
     bool found = false;
     for(Booking &b : bookings){
-        if(b.customer_id == customer_id){
+        if(b.customer_id == customer.customer_id){
             Room room;
             RoomType roomtype;
             getRoomById(b.room_id, room);
             getRoomTypeById(room.room_type_id, roomtype);
 
-            cout <<  left << setw(10) << b.booking_id << setw(10) << room.room_number << setw(10) << roomtype.type_name << setw(10) << b.check_in << setw(10) << b.check_out << endl;
+            cout <<  left << setw(15) << b.booking_id << setw(15) << room.room_number << setw(15) << roomtype.type_name << setw(15) << b.check_in << setw(15) << b.check_out << endl;
             found = true;
         }
     }
@@ -196,7 +218,7 @@ void showRoomBookings(){
     cin >> room_number;
 
     if(cin.fail()){
-        showChoiceError();
+        showInputError();
         return;
     }
 
@@ -207,8 +229,8 @@ void showRoomBookings(){
     }
 
     bool found = false;
-    showHighlight("--- Room Bookings ---" + to_string(room_number));
-    cout << left << setw(10) << "Booking Id" << setw(10) << "Customer" << setw(10) << "Room Type" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
+    showHighlight("--- Room Bookings --- ( Room " + to_string(room_number) + " )") ;
+    cout << left << setw(15) << "Booking Id" << setw(15) << "Customer" << setw(15) << "Room Type" << setw(15) << "Check In" << setw(15) << "Check Out" << endl;
 
     for(Booking &b : bookings){
         if(b.room_id == room.room_id){
@@ -217,7 +239,7 @@ void showRoomBookings(){
             getCustomerById(b.customer_id, customer);
             getRoomTypeById(room.room_type_id, roomtype);
 
-            cout << left << setw(10) << b.booking_id << setw(10) << customer.customer_id << setw(10) << roomtype.type_name << setw(10) << b.check_in << setw(10) << b.check_out << endl;
+            cout << left << setw(15) << b.booking_id << setw(15) << customer.name << setw(15) << roomtype.type_name << setw(15) << b.check_in << setw(15) << b.check_out << endl;
             found = true;
         }
     }
@@ -234,9 +256,9 @@ void showBookings(){
     }
 
     showHighlight("--- Bookings List --- ");
-    cout << left << setw(10) << "Booking Id" << setw(10) << "Customer" 
-        << setw(10) << "Room Number" << setw(10) << "Room Type" << setw(10) 
-        << "Staff" << setw(10) << "Check In" << setw(10) << "Check Out" << endl;
+    cout << left << setw(15) << "Booking Id" << setw(15) << "Customer" 
+        << setw(15) << "Room No" << setw(15) << "Room Type" << setw(15) 
+        << "Staff" << setw(15) << "Check In" << setw(15) << "Check Out" << endl;
 
     for(Booking &b : bookings){
         Customer customer;
@@ -249,14 +271,13 @@ void showBookings(){
         getRoomTypeById(room.room_type_id, roomtype);
         getStaffById(b.staff_id, staff);
 
-        cout << left << setw(10) << b.booking_id << setw(10) << customer.name << 
-            setw(10) << room.room_number << setw(10) << roomtype.type_name <<
-            setw(10) << staff.name << setw(10) << b.check_in << setw(10) << b.check_out;
+        cout << left << setw(15) << b.booking_id << setw(15) << customer.name << 
+            setw(15) << room.room_number << setw(15) << roomtype.type_name <<
+            setw(15) << (staff.staff_id != -1 ? staff.name : " - ") << setw(15) << b.check_in << setw(15) << b.check_out << endl;
     }
 }
 
 // database functions
-
 void getBookings(){
     try{
         string selectQuery = "SELECT * FROM Bookings";
@@ -269,6 +290,7 @@ void getBookings(){
         exitProgram();
     }
 }
+
 
 int BookingCallback(void *data, int columns, char **values, char **column_names){
     vector<Booking> *bookings = static_cast<vector<Booking> *>(data);

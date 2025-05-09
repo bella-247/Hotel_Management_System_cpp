@@ -25,7 +25,7 @@ struct Date {
 bool validateDate(Date date);
 bool getBookingById(int &booking_id, Booking &booking);
 void findBooking();
-Booking addBooking();
+Booking addBooking(int room_number = -1);
 void showBookingDetails(int &booking_id);
 void showCustomerBookings();
 void showRoomBookings();

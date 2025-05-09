@@ -1,6 +1,3 @@
----
-marp : true
----
 # Hotel Management System
 ---
 

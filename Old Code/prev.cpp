@@ -246,12 +246,12 @@ void showRoomDetails() {
     // Displays detailed information about room types, including range, price, and availability.
 
     cout << "\nRoom Details:\n";
-    cout << left << setw(10) << "Types" << setw(15) << "Range" << setw(10) << "Price" << setw(15) << "Status" << "\n";
+    cout << left << setw(15) << "Types" << setw(15) << "Range" << setw(15) << "Price" << setw(15) << "Status" << "\n";
     cout << "----------------------------------------------------\n";
     for (int i = 0; i < NUM_ROOM_TYPES; i++) {
         // Build range string, e.g., [1-5], for each room type.
         string range = "[" + to_string(prefixRoomSizes[i] + 1) + "-" + to_string(prefixRoomSizes[i + 1]) + "]";
-        cout << left << setw(10) << roomTypes[i] << setw(15) << range << setw(10) << to_string(roomPrices[i]) + " Br";
+        cout << left << setw(15) << roomTypes[i] << setw(15) << range << setw(15) << to_string(roomPrices[i]) + " Br";
         if (roomsReserved[i] == roomSizes[i]) {
             // All rooms of this type are booked.
             cout << "All Booked\n";
@@ -267,7 +267,7 @@ void showUsersList() {
 
     cout << "\n\nList of People in this Hotel\n\n";
 
-    cout << left << setw(10) << "Room No." << setw(20) << "Name" << setw(10) << "Id" << setw(15) << "Phone Number" << setw(10) << "Room Types";
+    cout << left << setw(15) << "Room No." << setw(20) << "Name" << setw(15) << "Id" << setw(15) << "Phone Number" << setw(15) << "Room Types";
     cout << left << setw(10 + 20 + 10 + 15 + 10 + 5) << setfill('-') << "\n";
     cout << setfill(' ') << endl;
 
@@ -284,7 +284,7 @@ void showUsersList() {
         if (roomAvailability[room] == false) {
             // If the room is occupied, display the occupant's details.
             string name = personalInfo[room][0], id = personalInfo[room][1], phone = personalInfo[room][2];
-            cout << left << setw(10) << room + 1 << setw(20) << name << setw(10) << id << setw(15) << phone << setw(10) << roomTypes[room_type] << endl;
+            cout << left << setw(15) << room + 1 << setw(20) << name << setw(15) << id << setw(15) << phone << setw(15) << roomTypes[room_type] << endl;
         }
     }
     cout << "\033[1;32m" << "\v\v\v" << "\033[0m";

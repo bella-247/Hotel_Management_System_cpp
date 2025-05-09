@@ -15,7 +15,7 @@ userType:
 		cin >> choice;
 		
 		if (cin.fail()) {
-			showChoiceError();
+			showInputError();
 			continue;
 		}
 		
@@ -31,7 +31,7 @@ userType:
 			current_user.isStaff = false;
 			break;
 		default:
-			showChoiceError();
+			showInputError();
 			continue;
 		}
 	}
@@ -49,7 +49,7 @@ authentication:
 		cin >> choice;
 
 		if (cin.fail() || (current_user.isStaff && choice == 2)) {
-			showChoiceError();
+			showInputError();
 		continue;
 		}
 
@@ -69,31 +69,34 @@ authentication:
 			break;
 		}
 		default:
-		showChoiceError();
+		showInputError();
 		}
 	}
 }
 
 
-void showCustomerMenu(void (*startProgram)()) {
+void showCustomerMenu(void (*startProgram)(), void (*retrieveDatabaseData)()) {
+
   int choice;
 
   while (true) {
+	retrieveDatabaseData();
 	showHighlight("********** Customer Menu **********");
 	cout << "1, Book a Room" << endl;
 	cout << "2, See Room Types" << endl;
 	cout << "3, See Available Rooms" << endl;
-	cout << "4, Display Room Details" << endl;
-	cout << "5, Leave Room" << endl;
-	cout << "6, Show User Profile" << endl;
-	cout << "7, Logout" << endl;
-	cout << "8, Exit" << endl;
+	cout << "4, See Booked Rooms " << endl;
+	cout << "5, Display Room Details" << endl;
+	cout << "6, Leave Room" << endl;
+	cout << "7, Show User Profile" << endl;
+	cout << "8, Logout" << endl;
+	cout << "9, Exit" << endl;
 
 	cout << "Enter your choice: ";
 	cin >> choice;
 
 	if (cin.fail() || choice < 1 || choice > 8) {
-	  showChoiceError();
+	  showInputError();
 	  continue;
 	}
 
@@ -105,42 +108,48 @@ void showCustomerMenu(void (*startProgram)()) {
 	  showRoomTypes();
 	  break;
 	case 3:
-	  showAvailableRooms(); // Add show available rooms functionality
+	  showAvailableRooms(); 
 	  break;
-	case 4:
+	case 4: 
+		showBookedRooms();
+		break;
+	case 5:
 		{
 			int room_number;
 			cout << "Enter the room number: ";
 			cin >> room_number;
 			if(cin.fail()){
-				showChoiceError();
+				showInputError();
 				return;
 			}
 			showRoomDetails(room_number);
 		}
 	  break;
-	case 5:
-	  leaveRoom(); // leaveRoom functionality added
-	  break;
 	case 6:
-	  showCustomerProfile();
+	  leaveRoom();
 	  break;
 	case 7:
-	  leaveRoom();
-	  logOut(startProgram);
+	  showCustomerProfile();
 	  break;
 	case 8:
 	  leaveRoom();
+	  logOut(startProgram);
+	  break;
+	case 9:
+	  leaveRoom();
 	  exitProgram();
 	default:
-	  showChoiceError();
+	  showInputError();
 	}
   }
 }
 
-void showStaffMenu(void (*startProgram)()) {
+
+
+void showStaffMenu(void (*startProgram)(), void (*retrieveDatabaseData)()) {
 	int choice;
   while(true){
+	retrieveDatabaseData();
 	  showHighlight("********* Staff Menu **********");
 	  cout << "1, Customers" << endl;
 	  cout << "2, Staffs" << endl;
@@ -154,7 +163,7 @@ void showStaffMenu(void (*startProgram)()) {
 	  cin >> choice;
 
 	  if (cin.fail()) {
-		showChoiceError();
+		showInputError();
 		continue;
 	  }
 
@@ -189,10 +198,13 @@ void showStaffMenu(void (*startProgram)()) {
 		exitProgram();
 		break;
 	  default:
-		showChoiceError();
+		showInputError();
 	  }
   }
 }
+
+
+
 
 void CustomersMenu() {
   int choice;
@@ -209,7 +221,7 @@ void CustomersMenu() {
     cin >> choice;
 
     if (cin.fail()) {
-      showChoiceError();
+      showInputError();
       continue;
     }
 
@@ -233,7 +245,7 @@ void CustomersMenu() {
     case 5:
       exitProgram();
     default:
-      showChoiceError();
+      showInputError();
     }
   }
 }
@@ -253,7 +265,7 @@ void StaffsMenu() {
     cin >> choice;
 
     if (cin.fail()) {
-      showChoiceError();
+      showInputError();
       continue;
     }
 
@@ -275,7 +287,7 @@ void StaffsMenu() {
     case 5:
       exitProgram();
     default:
-      showChoiceError();
+      showInputError();
     }
   }
 }
@@ -288,18 +300,19 @@ void RoomsMenu(){
 		cout << "1, Add Room" << endl;
 		cout << "2, Remove Room" << endl;
 		cout << "3, Show Available Rooms" << endl;
-		cout << "4, Show Rooms" << endl;
-		cout << "5, Show Room By Types" << endl;
-		cout << "6, Add Room Type" << endl;
-		cout << "7, Remove Room Type" << endl;
-		cout << "8, Show Room Types" << endl;
-		cout << "9, Exit" << endl;
+		cout << "4, Show Booked Rooms " << endl;
+		cout << "5, Show Rooms" << endl;
+		cout << "6, Show Room By Types" << endl;
+		cout << "7, Add Room Type" << endl;
+		cout << "8, Remove Room Type" << endl;
+		cout << "9, Show Room Types" << endl;
+		cout << "10, Exit" << endl;
 
 		cout << "Enter your choice: ";
 		cin >> choice;
 
 		if (cin.fail()) {
-		  showChoiceError();
+		  showInputError();
 		  continue;
 		}
 
@@ -314,26 +327,30 @@ void RoomsMenu(){
 		  break;
 		case 3:
 			showAvailableRooms();
-		break;
+			break;
 		case 4:
+			showBookedRooms();
+			break;
+		case 5:
 			showRooms();
 		break;
-		case 5:
-			showRoomsByTypes();
 		case 6:
+			showRoomsByTypes();
+			break;
+		case 7:
 			addRoomType();
 		break;
-		case 7:
+		case 8:
 			removeRoomType();
 			break;
-		case 8:
+		case 9:
 			showRoomTypes();
 		  break;
-		case 9:
+		case 10:
 		  exitProgram();
 		  break;
 		default:
-		  showChoiceError();
+		  showInputError();
 		}
 	  }
 }
@@ -355,7 +372,7 @@ void BookingsMenu() {
     cin >> choice;
 
     if (cin.fail()) {
-      showChoiceError();
+      showInputError();
       continue;
     }
 
@@ -379,7 +396,9 @@ void BookingsMenu() {
       break;
     case 6:
 		{
-			int booking_id;		
+			int booking_id;
+			cout << "Enter the booking id: ";
+			cin >> booking_id;
 			showBookingDetails(booking_id);
 		}
       break;
@@ -387,7 +406,7 @@ void BookingsMenu() {
       exitProgram();
       break;
     default:
-      showChoiceError();
+      showInputError();
     }
   }
 }
@@ -407,7 +426,7 @@ void PaymentsMenu(){
 		cin >> choice;
 
 		if (cin.fail()) {
-		  showChoiceError();
+		  showInputError();
 		  continue;
 		}
 
@@ -430,7 +449,7 @@ void PaymentsMenu(){
 		  exitProgram();
 		  break;
 		default:
-		  showChoiceError();
+		  showInputError();
 		}
 	  }
 }

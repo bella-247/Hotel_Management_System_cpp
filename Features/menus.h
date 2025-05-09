@@ -16,10 +16,10 @@
 
 using namespace std;
 
-void showChoiceError();
+void showInputError();
 void showRegistrationMenu();
-void showStaffMenu(void (*startProgram)());
-void showCustomerMenu(void (*startProgram)());
+void showStaffMenu(void (*startProgram)(), void(*retrieveDatabaseData)());
+void showCustomerMenu(void (*startProgram)(), void(*retrieveDatabaseData)());
 
 void CustomersMenu();
 void StaffsMenu();

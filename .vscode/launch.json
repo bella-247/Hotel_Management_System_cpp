@@ -1,6 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+        "type": "by-gdb",
+        "request": "launch",
+        "name": "Launch(gdb)",
+        "program": "${fileBasenameNoExtension}",
+        "cwd": "${workspaceRoot}"
+    },
       {
           "name": "C/C++ Debug",
           "type": "cppdbg",
@@ -12,7 +19,7 @@
           "environment": [],
           "externalConsole": true,
           "MIMode": "gdb",
-          "miDebuggerPath": "C:/MinGW/bin/gdb.exe",  // Update if gdb is elsewhere
+          "miDebuggerPath": "C:/MinGW/bin/g++.exe",  // Update if gdb is elsewhere
           "setupCommands": [
               {
                   "description": "Enable pretty-printing for gdb",
