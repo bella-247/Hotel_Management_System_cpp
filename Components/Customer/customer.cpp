@@ -30,6 +30,11 @@ bool getCustomerData(Customer &customer) {
       showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
+
+    if(!validateEmail(customer.email)){
+      showError("Enter an appropriate email please ");
+    }
+
     // if the customer already exists i want to return to the menu
     if (isCustomerAlreadyRegistered(customer)) {
       showWarning("Customer already registered. Please try again.");
@@ -163,14 +168,14 @@ void showCustomers() {
   }
 
   showHighlight("--- Customer List ---");
-  cout << left << setw(10) << "Customer ID" << setw(20) << "Name" << setw(30)
+  cout << left << setw(15) << "Customer ID" << setw(20) << "Name" << setw(30)
        << "Email" << setw(20) << "Phone" << endl;
 
   cout << string(77, '-') << endl;
 
   for (int i = customers.size() - 1; i > -1; --i) {
     const Customer &customer = customers.at(i);
-    cout << left << setw(10) << customer.customer_id << setw(20)
+    cout << left << setw(15) << customer.customer_id << setw(20)
          << customer.name << setw(30) << customer.email << setw(20)
          << customer.phone_number << endl;
   }

@@ -5,6 +5,7 @@
 using namespace std;
 
 User current_user;
+
 vector<Staff> staffs;
 vector<RoomType> roomtypes;
 vector<Room> rooms;
@@ -22,12 +23,21 @@ bool isEmpty(const string &str) {
     return str.empty();
 }
 
+bool validateEmail(string email){
+  for(char c : email){
+    if(c == '@'){
+      return true;
+    }
+  }
+  return false;
+}
+
 void cleanInput(){
     cin.clear();
     cin.ignore(INT_MAX, '\n');
 }
 
-void showChoiceError() {
+void showInputError() {
     showError("Invalid input, please try again.");
     cleanInput();
 }

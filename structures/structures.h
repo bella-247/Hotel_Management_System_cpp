@@ -57,8 +57,9 @@ struct Payment {
 
 
 bool isEmpty(const string &str);
+bool validateEmail(string email);
 void cleanInput();
-void showChoiceError();
+void showInputError();
 string to_lower(string str);
 
 // User state manager 

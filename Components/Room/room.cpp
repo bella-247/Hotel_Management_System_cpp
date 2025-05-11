@@ -44,8 +44,13 @@ Room addRoom() {
     cin >> room_number;
 
     if (cin.fail()) {
-        showChoiceError();
+        showInputError();
         continue;
+    }
+
+    if(room_number < 0){
+      showError("No negative room numbers allowed ");
+      return Room();
     }
 
     if(getRoomByRoomNumber(room_number, new_room)){
@@ -55,9 +60,9 @@ Room addRoom() {
 
     // display all the available room types
     showHighlight(" --- Available Room Types --  ");
-    cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
+    cout << left << setw(15) << "ID " << setw(15) << "Room Type name" << endl;
     for(RoomType &rt : roomtypes){
-        cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
+        cout << left << setw(15) << rt.room_type_id << setw(15) << rt.type_name << endl; 
     }
 
     cout << "Enter the room type id: ";
@@ -92,7 +97,7 @@ void removeRoom() {
   cin >> room_number;
 
   if(cin.fail()) {
-    showChoiceError();
+    showInputError();
     return;
   }
 
@@ -133,7 +138,7 @@ void bookRoom() {
     cin >> room_number;
 
     if(cin.fail()) {
-        showChoiceError();
+        showInputError();
         return;
     }
 
@@ -148,6 +153,15 @@ void bookRoom() {
         return;
     }
 
+    for(Room &r : rooms){
+      if(r.room_number == room_number){
+        r.is_available = false;
+      }
+    }
+
+    // to add the current bookin gth the database 
+    addBooking(room_number);
+
     // update the room availability in the database
     string updateQuery = "UPDATE Rooms SET is_available = 0 WHERE room_number = '" + to_string(room_number) + "';";
     
@@ -156,7 +170,9 @@ void bookRoom() {
             throw runtime_error("Failed to update room availability.");
         }
         
-        current_user.room_id = room.room_id; // set the current user's room id
+        if(current_user.isCustomer){
+          current_user.room_id = room.room_id; // set the current user's room id
+        }
         showSuccess("Room booked successfully.");
     }
     catch (const exception &e) {
@@ -169,7 +185,7 @@ void bookRoom() {
 void showAvailableRooms() {
     
     showHighlight("--- Available Rooms ---");
-    cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
+    cout << left << setw(15) << "Room ID" << setw(15) << "Room No" << setw(15)
     << "Room Type" << endl;
     
   for (const Room &room : rooms) {
@@ -179,37 +195,54 @@ void showAvailableRooms() {
     
     RoomType roomtype;
     getRoomTypeById(room.room_type_id, roomtype);
-    cout << left << setw(10) << room.room_id << setw(10) << room.room_number << setw(10) << roomtype.type_name << endl;
+    cout << left << setw(15) << room.room_id << setw(15) << room.room_number << setw(15) << roomtype.type_name << endl;
+  }
+}
+
+void showBookedRooms() {
+    
+    showHighlight("--- Booked Rooms ---");
+    cout << left << setw(15) << "Room ID" << setw(15) << "Room No" << setw(15)
+    << "Room Type" << endl;
+    
+  for (const Room &room : rooms) {
+      if (room.is_available) {
+          continue;
+      }
+    
+    RoomType roomtype;
+    getRoomTypeById(room.room_type_id, roomtype);
+    cout << left << setw(15) << room.room_id << setw(15) << room.room_number << setw(15) << roomtype.type_name << endl;
   }
 }
 
 void showRoomsByTypes(){
   showHighlight("Room Types");
-  cout << left << setw(10) << "ID " << setw(10) << "Room Type name" << endl;
+  cout << left << setw(15) << "ID " << setw(15) << "Room Type name" << endl;
   for(RoomType &rt : roomtypes){
-      cout << left << setw(10) << rt.room_type_id << setw(10) << rt.type_name << endl; 
+      cout << left << setw(15) << rt.room_type_id << setw(15) << rt.type_name << endl; 
   }
 
   cout << "Enter the room type id: ";
   int room_type_id;
   cin >> room_type_id;
   if(cin.fail()){
-      showChoiceError();
+      showInputError();
       return;
   }
 
   RoomType roomtype;
-  if(getRoomTypeById(room_type_id, roomtype)){
+  if(!getRoomTypeById(room_type_id, roomtype)){
       showWarning("Room Type not found.");
       return;
   }
 
   showHighlight(" --- Rooms of " + roomtype.type_name + " --- ");
-  cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << endl;
+  cout << left << setw(15) << "Room ID" << setw(15) << "Room No" << endl;
   
   for(Room &r : rooms){
       if(r.room_type_id == room_type_id){
-          cout << left << setw(10) << r.room_id << setw(10) << r.room_number << endl;
+          cout << left << setw(15) << r.room_id << setw(15) << r.room_number << endl;
       }
   }
 }
@@ -242,6 +275,13 @@ void leaveRoom() {
     }
 
     int room_id = current_user.room_id;
+
+    for(Room &r : rooms){
+      if(r.room_id == room_id){
+        r.is_available = true;
+      }
+    }
+
     try{
         string updateQuery = "UPDATE Rooms SET is_available = 1 WHERE room_id = " + to_string(room_id) + ";";
         
@@ -263,27 +303,27 @@ void leaveRoom() {
 
 // Show all rooms function
 void showRooms() {
-    string query = "SELECT * FROM Rooms;";
+    // string query = "SELECT * FROM Rooms;";
   
-    try{
-        if (!getObjects(query, RoomCallback, &rooms)) {
-          throw runtime_error("Failed to fetch rooms from database");
-        }
-    }
-      catch (const exception &e) {
-          showError("Error: " + string(e.what()));
-          exitProgram();
-      }
+    // try{
+    //     if (!getObjects(query, RoomCallback, &rooms)) {
+    //       throw runtime_error("Failed to fetch rooms from database");
+    //     }
+    // }
+    //   catch (const exception &e) {
+    //       showError("Error: " + string(e.what()));
+    //       exitProgram();
+    //   }
   
     showHighlight("--- All Rooms ---");
-    cout << left << setw(10) << "Room ID" << setw(10) << "Room Number" << setw(10)
+    cout << left << setw(15) << "Room ID" << setw(15) << "Room No" << setw(15)
          << "Room Type" << setw(15) << "Availability" << endl;
     for (const Room &room : rooms) {
       RoomType roomtype;
       getRoomTypeById(room.room_type_id, roomtype);
   
-      cout << left << setw(10) << room.room_id << setw(10) << room.room_number
-           << setw(10) << roomtype.type_name << setw(15) << (room.is_available ? "Available" : "Not Available") << endl;
+      cout << left << setw(15) << room.room_id << setw(15) << room.room_number
+           << setw(15) << roomtype.type_name << setw(15) << (room.is_available ? "Available" : "Not Available") << endl;
     }
   }
 
@@ -305,11 +345,12 @@ void getRooms() {
 // callbacks
 int RoomCallback(void *data, int columns, char **values, char **column_names) {
   vector<Room> *rooms = static_cast<vector<Room> *>(data);
+  
   Room room;
 
-  room.room_id = atoi(values[0]);
-  room.room_number = atoi(values[1]);
-  room.room_type_id = atoi(values[2]);
+  room.room_id = values[0] ? atoi(values[0]) : -1;
+  room.room_number = values[1] ? atoi(values[1]) : -1;
+  room.room_type_id = values[2] ? atoi(values[2]) : -1;
   room.is_available = atoi(values[3]) == 1 ? true : false;
 
   rooms->push_back(room);

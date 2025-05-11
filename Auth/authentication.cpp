@@ -14,6 +14,8 @@ bool signUp() {
     return false;
 }
 
+
+
 bool logIn() {
     string email, password;
 
@@ -58,6 +60,9 @@ bool logIn() {
         return false;
     }
 }
+
+
+
 
 void logOut(void (*startProgram)()) {
     showInfo("Logging out...");

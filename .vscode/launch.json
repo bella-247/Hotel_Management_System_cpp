@@ -2,6 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+<<<<<<< HEAD
+      "type": "by-gdb",
+      "request": "launch",
+      "name": "Launch(gdb)",
+      "program": "${fileBasenameNoExtension}",
+      "cwd": "${workspaceRoot}"
+    },
+    {
+=======
+>>>>>>> main
       "name": "C/C++ Debug",
       "type": "cppdbg",
       "request": "launch",
@@ -12,7 +22,11 @@
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
+<<<<<<< HEAD
+      "miDebuggerPath": "C:/MinGW/bin/g++.exe",
+=======
       "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
+>>>>>>> main
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
@@ -29,8 +43,18 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
+<<<<<<< HEAD
+<<<<<<< HEAD
+      "cwd": "c:/Users/prina/OneDrive/Documents/fg/react/Hotel_Management_System",
+      "program": "c:/Users/prina/OneDrive/Documents/fg/react/Hotel_Management_System/build/Debug/outDebug",
+=======
+      "cwd": "c:/Users/prina/OneDrive/Documents/New folder (3)/Hotel_Management_System",
+      "program": "c:/Users/prina/OneDrive/Documents/New folder (3)/Hotel_Management_System/build/Debug/outDebug",
+>>>>>>> 97d7caab9b0ee8fb054b1048b0c7581b81c629a5
+=======
       "cwd": "c:/Users/prina/OneDrive/Documents/assignments/Hotel_Management_System",
       "program": "c:/Users/prina/OneDrive/Documents/assignments/Hotel_Management_System/build/Debug/outDebug",
+>>>>>>> main
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
