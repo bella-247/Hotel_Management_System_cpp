@@ -6,6 +6,37 @@ bool validDate(Date date){
     return lower_limits && upper_limits;
 }
 
+bool compareDates(Date date1, Date date2){ // compares if the first date is less than the second date 
+    if(date1.year < date2.year){
+        return true;
+    }
+    
+    if(date1.year > date2.year){
+        return false;
+    }
+
+    // reaches here if the years are equal
+    if(date1.month < date2.month){
+        return true;
+    }
+
+    if(date1.month > date2.month){
+        return false;
+    }
+
+    // reaches here if the months are equal 
+    if(date1.date >=  date2.date){
+        return true;
+    }
+
+    if(date1.date > date2.date){
+        return false;
+    }
+    return false;
+}
+
+
+
 bool getBookingById(int &booking_id, Booking &booking) {
     for(Booking &b : bookings) {
         if(b.booking_id == booking_id) {
@@ -16,6 +47,7 @@ bool getBookingById(int &booking_id, Booking &booking) {
     return false;
 }
 
+// find booking using customer email and room number
 void findBooking() {
     Room room;
     Customer customer;
@@ -86,6 +118,7 @@ Booking addBooking(int room_number){
         showWarning("Room not found.");
         return Booking();
     }
+
     if(room.is_available){
         showWarning("Room is still not booked");
         return Booking();
@@ -104,7 +137,7 @@ Booking addBooking(int room_number){
         return Booking();
     }
 
-    if(!validDate(check_in) || !validDate(check_out)){
+    if(!validDate(check_in) || !validDate(check_out) && !compareDates(check_in, check_out)){
         showError("Invalid Date");
         return Booking();
     }
@@ -276,6 +309,10 @@ void showBookings(){
             setw(15) << (staff.staff_id != -1 ? staff.name : " - ") << setw(15) << b.check_in << setw(15) << b.check_out << endl;
     }
 }
+
+
+
+
 
 // database functions
 void getBookings(){

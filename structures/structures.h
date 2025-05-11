@@ -57,6 +57,7 @@ struct Payment {
 
 
 bool isEmpty(const string &str);
+bool validateEmail(string email);
 void cleanInput();
 void showInputError();
 string to_lower(string str);

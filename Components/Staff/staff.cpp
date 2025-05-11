@@ -1,5 +1,6 @@
 #include "staff.h"
 
+
 // helper functions
 bool isStaffAlreadyRegistered(Staff &staff) {
   for (const Staff &s : staffs) {
@@ -30,6 +31,11 @@ bool getStaffData(Staff &staff) {
       showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
+
+    if(!validateEmail(staff.email)){
+      showError("Enter an appropriate email please ");
+    }
+
     if (isStaffAlreadyRegistered(staff)) {
       showWarning("Staff already registered. Please try again.");
       return false;

@@ -5,6 +5,7 @@
 using namespace std;
 
 User current_user;
+
 vector<Staff> staffs;
 vector<RoomType> roomtypes;
 vector<Room> rooms;
@@ -20,6 +21,15 @@ bool isEmpty(const string &str) {
         }
     }
     return str.empty();
+}
+
+bool validateEmail(string email){
+  for(char c : email){
+    if(c == '@'){
+      return true;
+    }
+  }
+  return false;
 }
 
 void cleanInput(){

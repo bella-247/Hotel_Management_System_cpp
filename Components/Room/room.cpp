@@ -170,7 +170,9 @@ void bookRoom() {
             throw runtime_error("Failed to update room availability.");
         }
         
-        current_user.room_id = room.room_id; // set the current user's room id
+        if(current_user.isCustomer){
+          current_user.room_id = room.room_id; // set the current user's room id
+        }
         showSuccess("Room booked successfully.");
     }
     catch (const exception &e) {

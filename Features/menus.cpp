@@ -48,9 +48,9 @@ authentication:
 		cout << "Choose from the above: ";
 		cin >> choice;
 
-		if (cin.fail() || (current_user.isStaff && choice == 2)) {
+		if (cin.fail()) {
 			showInputError();
-		continue;
+			continue;
 		}
 
 		switch (choice) {
@@ -65,6 +65,9 @@ authentication:
 		case 2: {
 			if (current_user.isCustomer) {
 				signUp();
+			}
+			else{
+				showInputError();
 			}
 			break;
 		}
@@ -143,7 +146,6 @@ void showCustomerMenu(void (*startProgram)(), void (*retrieveDatabaseData)()) {
 	}
   }
 }
-
 
 
 void showStaffMenu(void (*startProgram)(), void (*retrieveDatabaseData)()) {
@@ -299,14 +301,15 @@ void RoomsMenu(){
 		cout << "0, Previous menu" << endl;
 		cout << "1, Add Room" << endl;
 		cout << "2, Remove Room" << endl;
-		cout << "3, Show Available Rooms" << endl;
-		cout << "4, Show Booked Rooms " << endl;
-		cout << "5, Show Rooms" << endl;
-		cout << "6, Show Room By Types" << endl;
-		cout << "7, Add Room Type" << endl;
-		cout << "8, Remove Room Type" << endl;
-		cout << "9, Show Room Types" << endl;
-		cout << "10, Exit" << endl;
+		cout << "3, Book Room for customer " << endl;
+		cout << "4, Show Available Rooms" << endl;
+		cout << "5, Show Booked Rooms " << endl;
+		cout << "6, Show Rooms" << endl; // show all rooms
+		cout << "7, Show Room By Types" << endl; // show rooms of a specific room type
+		cout << "8, Add Room Type" << endl;
+		cout << "9, Remove Room Type" << endl;
+		cout << "10, Show Room Types" << endl;
+		cout << "11, Exit" << endl;
 
 		cout << "Enter your choice: ";
 		cin >> choice;
@@ -326,27 +329,30 @@ void RoomsMenu(){
 		  removeRoom();
 		  break;
 		case 3:
-			showAvailableRooms();
+			bookRoom();
 			break;
 		case 4:
-			showBookedRooms();
+			showAvailableRooms();
 			break;
 		case 5:
+			showBookedRooms();
+			break;
+		case 6:
 			showRooms();
 		break;
-		case 6:
+		case 7:
 			showRoomsByTypes();
 			break;
-		case 7:
+		case 8:
 			addRoomType();
 		break;
-		case 8:
+		case 9:
 			removeRoomType();
 			break;
-		case 9:
+		case 10:
 			showRoomTypes();
 		  break;
-		case 10:
+		case 11:
 		  exitProgram();
 		  break;
 		default:

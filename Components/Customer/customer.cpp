@@ -30,6 +30,11 @@ bool getCustomerData(Customer &customer) {
       showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
+
+    if(!validateEmail(customer.email)){
+      showError("Enter an appropriate email please ");
+    }
+
     // if the customer already exists i want to return to the menu
     if (isCustomerAlreadyRegistered(customer)) {
       showWarning("Customer already registered. Please try again.");
