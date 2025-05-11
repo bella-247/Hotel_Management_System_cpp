@@ -160,7 +160,11 @@ void bookRoom() {
     }
 
     // to add the current bookin gth the database 
-    addBooking(room_number);
+
+    Booking booking = addBooking(room_number);
+    if(booking.booking_id == -1){
+      return;
+    }
 
     // update the room availability in the database
     string updateQuery = "UPDATE Rooms SET is_available = 0 WHERE room_number = '" + to_string(room_number) + "';";

@@ -7,6 +7,7 @@ bool validDate(Date date){
 }
 
 bool compareDates(Date date1, Date date2){ // compares if the first date is less than the second date 
+
     if(date1.year < date2.year){
         return true;
     }
@@ -25,7 +26,7 @@ bool compareDates(Date date1, Date date2){ // compares if the first date is less
     }
 
     // reaches here if the months are equal 
-    if(date1.date >=  date2.date){
+    if(date1.date <=  date2.date){
         return true;
     }
 
@@ -137,8 +138,12 @@ Booking addBooking(int room_number){
         return Booking();
     }
 
-    if(!validDate(check_in) || !validDate(check_out) && !compareDates(check_in, check_out)){
+    if(!validDate(check_in) || !validDate(check_out)){
         showError("Invalid Date");
+        return Booking();
+    }
+    if(!compareDates(check_in, check_out)){
+        showError("The dates must be correct relative to each other");
         return Booking();
     }
 
@@ -165,6 +170,7 @@ Booking addBooking(int room_number){
         if(current_user.isStaff){
             showSuccess("Booking succcessfully added");
         }
+        return bookings.back();
     }
     catch(const exception& e){
         showError("Error: " + string(e.what()));
