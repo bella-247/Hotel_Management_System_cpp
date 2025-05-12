@@ -1,18 +1,23 @@
 #include "staff.h"
 
 // helper functions
-bool isStaffAlreadyRegistered(Staff &staff) {
-  for (const Staff &s : staffs) {
-    if (s.email == staff.email) {
+bool isStaffAlreadyRegistered(Staff &staff)
+{
+  for (const Staff &s : staffs)
+  {
+    if (s.email == staff.email)
+    {
       return true;
     }
   }
   return false;
 }
 
-bool getStaffData(Staff &staff) {
+bool getStaffData(Staff &staff)
+{
   cleanInput();
-  while (true) {
+  while (true)
+  {
     cout << "Name: ";
     getline(cin, staff.name);
     cout << "Email: ";
@@ -26,11 +31,13 @@ bool getStaffData(Staff &staff) {
 
     if (isEmpty(staff.name) || isEmpty(staff.email) ||
         isEmpty(staff.password) || isEmpty(staff.phone_number) ||
-        isEmpty(staff.role)) {
+        isEmpty(staff.role))
+    {
       showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
-    if (isStaffAlreadyRegistered(staff)) {
+    if (isStaffAlreadyRegistered(staff))
+    {
       showWarning("Staff already registered. Please try again.");
       return false;
     }
@@ -38,11 +45,13 @@ bool getStaffData(Staff &staff) {
   }
 }
 
-
 // Get staff by ID
-bool getStaffById(int &staff_id, Staff &staff) {
-  for (Staff &s : staffs) {
-    if (s.staff_id == staff_id) {
+bool getStaffById(int &staff_id, Staff &staff)
+{
+  for (Staff &s : staffs)
+  {
+    if (s.staff_id == staff_id)
+    {
       staff = s;
       return true;
     }
@@ -50,85 +59,100 @@ bool getStaffById(int &staff_id, Staff &staff) {
   return false;
 }
 
-bool getStaffByEmail(string email, Staff &staff){
-  for (Staff &s : staffs) {
-    if (s.email == email) {
+bool getStaffByEmail(string email, Staff &staff)
+{
+  for (Staff &s : staffs)
+  {
+    if (s.email == email)
+    {
       staff = s;
       return true;
     }
   }
   return false;
 }
-
 
 // main  functions
 
-Staff addStaff() {
+Staff addStaff()
+{
   Staff staff;
-  if(!getStaffData(staff)){
+  if (!getStaffData(staff))
+  {
     return Staff();
   }
 
-  try {
+  try
+  {
     string insertQuery = "INSERT INTO Staff (name, email, password, "
                          "phone_number, role) VALUES ('" +
                          staff.name + "', '" + staff.email + "', '" +
                          staff.password + "', '" + staff.phone_number + "', '" +
                          staff.role + "');";
 
-    if (!insertObject(insertQuery, "Staff", StaffCallback, &staffs)) {
+    if (!insertObject(insertQuery, "Staff", StaffCallback, &staffs))
+    {
       throw runtime_error("Failed to create staff in database");
     }
 
     showSuccess("Staff < " + staff.name + " > created successfully!");
     return staffs.back();
-  } 
-  catch (const exception &e) {
+  }
+  catch (const exception &e)
+  {
     showError("Error: " + string(e.what()));
     exitProgram();
     return Staff(); // Return an empty Staff object in case of error
   }
 }
 
-void removeStaff() {
+void removeStaff()
+{
   string email;
   cleanInput();
   cout << "Enter the email of the staff to remove: ";
   getline(cin, email);
 
   bool found = false;
-  for (int i = 0; i < staffs.size(); ++i) {
-    if (staffs.at(i).email == email) {
+  for (int i = 0; i < staffs.size(); ++i)
+  {
+    if (staffs.at(i).email == email)
+    {
       staffs.erase(staffs.begin() + i);
       found = true;
       break;
     }
   }
-  if (!found) {
+  if (!found)
+  {
     showError("Staff not found.");
     return;
   }
 
-  try {
+  try
+  {
     string deleteQuery = "DELETE FROM Staff WHERE email = '" + email + "';";
 
-    if (!deleteObject(deleteQuery)) {
+    if (!deleteObject(deleteQuery))
+    {
       throw runtime_error("Failed to delete staff from database");
     }
 
     showSuccess("Staff deleted successfully!");
   }
 
-  catch (const exception &e) {
+  catch (const exception &e)
+  {
     showError("Error: " + string(e.what()));
     exitProgram();
   }
 }
 
-
-void showStaffProfile(int &staff_id) {
+void showStaffProfile(int &staff_id)
+{
   Staff staff;
-  if (!getStaffById(staff_id, staff)) {
+  if (!getStaffById(staff_id, staff))
+  {
     showWarning("Staff not found.");
     return;
   }
@@ -141,15 +165,16 @@ void showStaffProfile(int &staff_id) {
   cout << "\tPhone Number: " << staff.phone_number << endl;
 }
 
-
-bool findStaff() {
+bool findStaff()
+{
   Staff staff;
   string email;
   cout << "Enter the email of the staff: ";
   cleanInput();
   getline(cin, email);
 
-  if(!getStaffByEmail(email, staff)){
+  if (!getStaffByEmail(email, staff))
+  {
     showWarning("Staff not found.");
     return false;
   }
@@ -158,8 +183,10 @@ bool findStaff() {
   return true;
 }
 
-void showStaffs() {
-  if (staffs.empty()) {
+void showStaffs()
+{
+  if (staffs.empty())
+  {
     showWarning("No staffs registered.");
     return;
   }
@@ -170,7 +197,8 @@ void showStaffs() {
 
   cout << string(77, '-') << endl;
 
-  for (int i = staffs.size() - 1; i > -1; --i) {
+  for (int i = staffs.size() - 1; i > -1; --i)
+  {
     const Staff &staff = staffs.at(i);
 
     cout << left << setw(10) << staff.staff_id << setw(20) << staff.name
@@ -179,27 +207,29 @@ void showStaffs() {
   }
 }
 
-
-
-
 // database functions
 
 // Retrieve all the staffs from the database
-void getStaffs() {
-  try {
+void getStaffs()
+{
+  try
+  {
     string query = "SELECT * FROM Staff;";
 
-    if (!getObjects(query, StaffCallback, &staffs)) {
+    if (!getObjects(query, StaffCallback, &staffs))
+    {
       throw runtime_error("Error when retrieving all the staffs");
     }
-
-  } catch (const exception &e) {
+  }
+  catch (const exception &e)
+  {
     showError("Error: " + string(e.what()));
     exitProgram();
   }
 }
 
-int StaffCallback(void *data, int columns, char **values, char **column_names) {
+int StaffCallback(void *data, int columns, char **values, char **column_names)
+{
   vector<Staff> *staffs = static_cast<vector<Staff> *>(data);
   Staff staff;
 

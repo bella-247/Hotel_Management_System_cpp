@@ -1,22 +1,25 @@
 #include "roomtypes.h"
 // Functions to find the required room types
 
-
-
 // check if room type id exists
-bool validateRoomTypeId(int room_type_id) {
-    for (RoomType &rt : roomtypes) {
-        if (rt.room_type_id == room_type_id) {
+bool validateRoomTypeId(int room_type_id)
+{
+    for (RoomType &rt : roomtypes)
+    {
+        if (rt.room_type_id == room_type_id)
+        {
             return true;
         }
     }
     return false;
 }
 
-
-bool getRoomTypeById(int room_type_id, RoomType &roomtype) {
-    for (RoomType &rt : roomtypes) {
-        if (rt.room_type_id == room_type_id) {
+bool getRoomTypeById(int room_type_id, RoomType &roomtype)
+{
+    for (RoomType &rt : roomtypes)
+    {
+        if (rt.room_type_id == room_type_id)
+        {
             roomtype = rt;
             return true;
         }
@@ -24,10 +27,12 @@ bool getRoomTypeById(int room_type_id, RoomType &roomtype) {
     return false;
 }
 
-
-bool getRoomTypeByTypeName(string type_name, RoomType &roomtype) {
-    for (RoomType &rt : roomtypes) {
-        if (to_lower(rt.type_name) == to_lower(type_name)) {
+bool getRoomTypeByTypeName(string type_name, RoomType &roomtype)
+{
+    for (RoomType &rt : roomtypes)
+    {
+        if (to_lower(rt.type_name) == to_lower(type_name))
+        {
             roomtype = rt;
             return true;
         }
@@ -35,100 +40,114 @@ bool getRoomTypeByTypeName(string type_name, RoomType &roomtype) {
     return false;
 }
 
-
-RoomType addRoomType() {
+RoomType addRoomType()
+{
     RoomType new_roomtype;
 
-    while(true){
+    while (true)
+    {
         cout << "Enter Room Type Name: ";
         cleanInput();
         getline(cin, new_roomtype.type_name);
 
-        if(isEmpty(new_roomtype.type_name)){
+        if (isEmpty(new_roomtype.type_name))
+        {
             showChoiceError();
             continue;
         }
 
         cout << "Enter Room Type Price: ";
         cin >> new_roomtype.price;
-        if (cin.fail()) {
+        if (cin.fail())
+        {
             showChoiceError();
             continue;
         }
         break;
     }
 
-
-
-    if(getRoomTypeByTypeName(new_roomtype.type_name, new_roomtype)){
+    if (getRoomTypeByTypeName(new_roomtype.type_name, new_roomtype))
+    {
         showWarning("Room Type already exists.");
         return RoomType();
     }
 
     string insertQuery = "INSERT INTO RoomTypes (type_name, price) VALUES ('" + new_roomtype.type_name +
-        "', " + to_string(new_roomtype.price) + ");";
-    try {
-        if (!insertObject(insertQuery, "RoomTypes", RoomTypeCallback, &roomtypes)) {
+                         "', " + to_string(new_roomtype.price) + ");";
+    try
+    {
+        if (!insertObject(insertQuery, "RoomTypes", RoomTypeCallback, &roomtypes))
+        {
             throw runtime_error("Failed to add Room Type.");
         }
     }
-    catch (const exception &e) {
+    catch (const exception &e)
+    {
         showError("Error: " + string(e.what()));
         exitProgram();
     }
-    showSuccess("Room Type < " + new_roomtype.type_name + " > created successfully!" );
+    showSuccess("Room Type < " + new_roomtype.type_name + " > created successfully!");
     return RoomType();
 }
 
-
-void removeRoomType() {
+void removeRoomType()
+{
     RoomType roomtype;
     int room_type_id;
     cout << "Enter Room Type ID to remove: ";
     cin >> room_type_id;
-    if (cin.fail()) {
+    if (cin.fail())
+    {
         showChoiceError();
         return;
     }
 
-    if(!getRoomTypeById(room_type_id, roomtype)){
+    if (!getRoomTypeById(room_type_id, roomtype))
+    {
         showWarning("Room Type not found.");
         return;
     }
 
-
     string deleteQuery = "DELETE FROM RoomTypes WHERE room_type_id = " + to_string(room_type_id) + ";";
-    try {
-        if (!executeQuery(deleteQuery)) {
+    try
+    {
+        if (!executeQuery(deleteQuery))
+        {
             throw runtime_error("Failed to remove Room Type.");
         }
-        
+
         showSuccess("Room Type with ID " + to_string(room_type_id) + " removed successfully!");
-    } catch (const exception &e) {
+    }
+    catch (const exception &e)
+    {
         showError("Error: " + string(e.what()));
         exitProgram();
     }
 }
 
-
-void showRoomTypeDetails(){
+void showRoomTypeDetails()
+{
     int room_type_id;
     cout << "Enter the room type id: ";
     cin >> room_type_id;
-    if(cin.fail()){
+    if (cin.fail())
+    {
         showChoiceError();
         return;
     }
 
     RoomType roomtype;
-    if(!getRoomTypeById(room_type_id, roomtype)){
+    if (!getRoomTypeById(room_type_id, roomtype))
+    {
         showWarning("Room Type not found ");
         return;
     }
 
     int room_count = 0;
-    for(Room &r : rooms){
-        if(r.room_type_id == room_type_id){
+    for (Room &r : rooms)
+    {
+        if (r.room_type_id == room_type_id)
+        {
             room_count++;
         }
     }
@@ -141,38 +160,46 @@ void showRoomTypeDetails(){
     cout << "Number of rooms: " << room_count << endl;
 }
 
-void showRoomTypes() {
-    if (roomtypes.empty()) {
+void showRoomTypes()
+{
+    if (roomtypes.empty())
+    {
         showWarning("No room types available.");
         return;
     }
 
     showHighlight("--- Room Types ---");
     cout << left << setw(10) << "ID" << setw(20) << "Type Name" << setw(10) << "Price" << endl;
-    for (const RoomType &roomtype : roomtypes) {
+    for (const RoomType &roomtype : roomtypes)
+    {
         cout << left << setw(10) << roomtype.room_type_id << setw(20) << roomtype.type_name
              << setw(10) << roomtype.price << endl;
     }
 }
 
+// database functions
 
-// database functions 
-
-void getRoomTypes() {
-    try {
-      string query = "SELECT * FROM RoomTypes;";
-      if (!getObjects(query, RoomTypeCallback, &roomtypes)) {
-        throw runtime_error("Error when retrieving all the room types");
-      }
-    } catch (const exception &e) {
-      showError("Error: " + string(e.what()));
-      exitProgram();
+void getRoomTypes()
+{
+    try
+    {
+        string query = "SELECT * FROM RoomTypes;";
+        if (!getObjects(query, RoomTypeCallback, &roomtypes))
+        {
+            throw runtime_error("Error when retrieving all the room types");
+        }
+    }
+    catch (const exception &e)
+    {
+        showError("Error: " + string(e.what()));
+        exitProgram();
     }
 }
 
 // callback function to handle the result of the query
 int RoomTypeCallback(void *data, int columns, char **values,
-                     char **column_names) {
+                     char **column_names)
+{
     vector<RoomType> *roomtypes = static_cast<vector<RoomType> *>(data);
 
     RoomType roomtype;

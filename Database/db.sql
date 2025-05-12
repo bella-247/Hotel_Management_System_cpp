@@ -62,21 +62,6 @@ CREATE TABLE Payments (
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id) ON DELETE CASCADE
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- For MySQL 
 
 
