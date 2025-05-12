@@ -12,8 +12,6 @@ bool connectToDatabase() {
   return true;
 }
 
-
-
 bool executeQuery(
   const string &query,
   int (*callback)  (void *, int, char **, char **), 
@@ -30,8 +28,6 @@ bool executeQuery(
   }
   return true;
 }
-
-
 
 bool createTables() {
   const string query = R"(
@@ -133,6 +129,7 @@ bool deleteObject(const string &query) { return executeQuery(query); }
 void closeDatabase() {
   if (db) {
     sqlite3_close(db);
+    db = nullptr;  // Prevent dangling pointer
   }
 }
 
