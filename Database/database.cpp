@@ -133,6 +133,7 @@ bool deleteObject(const string &query) { return executeQuery(query); }
 void closeDatabase() {
   if (db) {
     sqlite3_close(db);
+    db = nullptr;  // Prevent dangling pointer
   }
 }
 
