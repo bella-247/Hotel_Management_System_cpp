@@ -61,6 +61,7 @@ CREATE TABLE Payments (
     amount REAL NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id) ON DELETE CASCADE
+<<<<<<< HEAD
 );
 -- For MySQL 
 
@@ -149,3 +150,6 @@ CREATE TABLE Payments (
 -- DROP TABLE IF EXISTS rooms;
 -- DROP TABLE IF EXISTS customers;
 -- DROP TABLE IF EXISTS room_types;
+=======
+);
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49

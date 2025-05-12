@@ -12,6 +12,27 @@ bool connectToDatabase() {
   return true;
 }
 
+
+
+bool executeQuery(
+  const string &query,
+  int (*callback)  (void *, int, char **, char **), 
+  void *data) {
+
+  char *err_msg = nullptr;
+
+  int resultCode = sqlite3_exec(db, query.c_str(), callback, data, &err_msg);
+
+  if (resultCode != SQLITE_OK) {
+    cerr << "Error executing query: " << err_msg << endl;
+    sqlite3_free(err_msg);
+    return false;
+  }
+  return true;
+}
+
+
+
 bool createTables() {
   const string query = R"(
         CREATE TABLE IF NOT EXISTS Customers(
@@ -80,17 +101,7 @@ bool createTables() {
   return executeQuery(query);
 }
 
-bool executeQuery(const string &query,
-                  int (*callback)(void *, int, char **, char **), void *data) {
-  char *err_msg = nullptr;
-  int resultCode = sqlite3_exec(db, query.c_str(), callback, data, &err_msg);
-  if (resultCode != SQLITE_OK) {
-    cerr << "Error executing query: " << err_msg << endl;
-    sqlite3_free(err_msg);
-    return false;
-  }
-  return true;
-}
+
 
 bool getObject(const string &query,
                int (*callback)(void *, int, char **, char **), void *data) {
@@ -124,11 +135,12 @@ void closeDatabase() {
     sqlite3_close(db);
   }
 }
+
 void exitProgram() {
   closeDatabase();
 
   char c;
   cout << "\nPress any key to exit..." << endl;
   cin >> c;      // pause the program to see the output on the console
-  exit(0); // exit the program successfully
+  exit(0); // exit the program
 }

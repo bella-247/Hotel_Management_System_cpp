@@ -1,5 +1,6 @@
 #include "staff.h"
 
+
 // helper functions
 bool isStaffAlreadyRegistered(Staff &staff)
 {
@@ -36,8 +37,17 @@ bool getStaffData(Staff &staff)
       showError("Empty fields detected. Please fill all fields correctly.");
       continue;
     }
+<<<<<<< HEAD
     if (isStaffAlreadyRegistered(staff))
     {
+=======
+
+    if(!validateEmail(staff.email)){
+      showError("Enter an appropriate email please ");
+    }
+
+    if (isStaffAlreadyRegistered(staff)) {
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
       showWarning("Staff already registered. Please try again.");
       return false;
     }
@@ -192,8 +202,8 @@ void showStaffs()
   }
 
   showHighlight("--- Staff List ---");
-  cout << left << setw(10) << "Staff ID" << setw(20) << "Name" << setw(30)
-       << "Email" << setw(15) << "Phone" << setw(10) << "Role" << endl;
+  cout << left << setw(15) << "Staff ID" << setw(20) << "Name" << setw(30)
+       << "Email" << setw(15) << "Phone" << setw(15) << "Role" << endl;
 
   cout << string(77, '-') << endl;
 
@@ -201,9 +211,9 @@ void showStaffs()
   {
     const Staff &staff = staffs.at(i);
 
-    cout << left << setw(10) << staff.staff_id << setw(20) << staff.name
+    cout << left << setw(15) << staff.staff_id << setw(20) << staff.name
          << setw(30) << staff.email << setw(20) << staff.phone_number
-         << setw(10) << staff.role << endl;
+         << setw(15) << staff.role << endl;
   }
 }
 

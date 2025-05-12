@@ -30,7 +30,7 @@ Payment addPayment() {
   cout << "Amount: "; cin >> payment.amount;
   
   if (cin.fail()) {
-    showChoiceError();
+    showInputError();
     return Payment(); 
   }
 
@@ -74,7 +74,7 @@ void showPaymentByBookingId(){
   cout << "Enter the booking id: ";
   cin >> booking_id;
   if (cin.fail()) {
-    showChoiceError();
+    showInputError();
     return;
   }
 
@@ -97,13 +97,13 @@ void showPaymentHistory() {
   }
 
   showHighlight("--- Payment History ---");
-  cout << left << setw(10) << "Payment ID" << setw(10) << "Booking ID" << setw(10)
+  cout << left << setw(15) << "Payment ID" << setw(15) << "Booking ID" << setw(15)
        << "Amount" << setw(15) << "Payment Date" << endl;
   for (int i = payments.size() - 1; i > -1; --i) {
     const Payment &payment = payments.at(i);
-    cout << left << setw(10) << payment.payment_id << 
-            setw(10) << payment.booking_id << 
-            setw(10) << payment.amount << setw(15) << payment.payment_date << endl;
+    cout << left << setw(15) << payment.payment_id << 
+            setw(15) << payment.booking_id << 
+            setw(15) << payment.amount << setw(15) << payment.payment_date << endl;
   }
 }
 
@@ -113,7 +113,7 @@ void generateInvoice() {
   cin >> payment_id;
 
   if(cin.fail()) {
-    showChoiceError();
+    showInputError();
     return;
   }
 
@@ -145,15 +145,15 @@ void generateInvoice() {
     showWarning("Customer not found");
   }
 
-  if (!getStaffById(booking.staff_id, staff)) {
+  if (booking.staff_id != - 1 && !getStaffById(booking.staff_id, staff)) {
     showWarning("Staff not found");
     return;
   }
 
   showHighlight("----- Invoice -----");
-  cout << "(Service Provider) Staff ID: " << booking.staff_id << endl;
-  cout << "Staff Name: " << staff.name << endl;
-  cout << "Staff Email: " << staff.email << endl << endl << endl;
+  cout << "(Service Provider) Staff ID: " << (staff.staff_id != -1 ? to_string(staff.staff_id) : " - ") << endl;
+  cout << "Staff Name: " << (staff.staff_id != -1 ? staff.name : " - ") << endl;
+  cout << "Staff Email: " << (staff.staff_id != -1 ? staff.email : " - ") << endl << endl << endl;
 
   cout << "Payment ID: " << payment.payment_id << endl;
   cout << "Booking ID: " << payment.booking_id << endl << endl;

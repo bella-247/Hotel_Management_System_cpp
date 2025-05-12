@@ -9,6 +9,7 @@
 #include "../../Structures/structures.h"
 #include "../../Features/Messages/messages.h"
 #include "../../Database/database.h"
+#include "../Booking/booking.h"
 #include "roomtypes.h"
 
 using namespace std;
@@ -25,6 +26,7 @@ void removeRoom();
 // room functions
 void bookRoom();
 void showAvailableRooms();
+void showBookedRooms();
 void showRoomsByTypes();
 void showRoomDetails(int room_number);
 void leaveRoom();

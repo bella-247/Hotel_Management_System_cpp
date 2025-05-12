@@ -50,17 +50,27 @@ RoomType addRoomType()
         cleanInput();
         getline(cin, new_roomtype.type_name);
 
+<<<<<<< HEAD
         if (isEmpty(new_roomtype.type_name))
         {
             showChoiceError();
+=======
+        if(isEmpty(new_roomtype.type_name)){
+            showInputError();
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
             continue;
         }
 
         cout << "Enter Room Type Price: ";
         cin >> new_roomtype.price;
+<<<<<<< HEAD
         if (cin.fail())
         {
             showChoiceError();
+=======
+        if (cin.fail()) {
+            showInputError();
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
             continue;
         }
         break;
@@ -96,9 +106,14 @@ void removeRoomType()
     int room_type_id;
     cout << "Enter Room Type ID to remove: ";
     cin >> room_type_id;
+<<<<<<< HEAD
     if (cin.fail())
     {
         showChoiceError();
+=======
+    if (cin.fail()) {
+        showInputError();
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
         return;
     }
 
@@ -130,9 +145,14 @@ void showRoomTypeDetails()
     int room_type_id;
     cout << "Enter the room type id: ";
     cin >> room_type_id;
+<<<<<<< HEAD
     if (cin.fail())
     {
         showChoiceError();
+=======
+    if(cin.fail()){
+        showInputError();
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
         return;
     }
 
@@ -169,11 +189,18 @@ void showRoomTypes()
     }
 
     showHighlight("--- Room Types ---");
+<<<<<<< HEAD
     cout << left << setw(10) << "ID" << setw(20) << "Type Name" << setw(10) << "Price" << endl;
     for (const RoomType &roomtype : roomtypes)
     {
         cout << left << setw(10) << roomtype.room_type_id << setw(20) << roomtype.type_name
              << setw(10) << roomtype.price << endl;
+=======
+    cout << left << setw(15) << "ID" << setw(20) << "Type Name" << setw(15) << "Price" << endl;
+    for (const RoomType &roomtype : roomtypes) {
+        cout << left << setw(15) << roomtype.room_type_id << setw(20) << roomtype.type_name
+             << setw(15) << roomtype.price << endl;
+>>>>>>> 531745d1aee481a9fdba5516acf54bddf824fb49
     }
 }
 
